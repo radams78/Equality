@@ -1,6 +1,6 @@
 {-# OPTIONS --no-positivity-check #-}
 
-module Equality3 where
+module Equality4 where
 
 data Σ {A : Set} (B : A → Set) : Set where
   _,_ : ∀ a → B a → Σ B
@@ -55,47 +55,58 @@ ref (π A B) = π* (ref A) {!!} -- FAIL: Need a ∼〈 ref A 〉 b => Eq (B a) (
 ref (σ A B) = σ* (ref A) {!!} -- FAIL: Need a ∼〈 ref A 〉 b => Eq (B a) (B b)
 ref (A ≃ B) = (ref A) ≃* (ref B)
 
+mutual
+  Sym : ∀ {A} {B} → Eq A B → Eq B A
+  Sym r* = r*
+  Sym (π* A* B*) = π* (Sym A*) (λ a a' a* → Sym (B* a' a (sym a*)))
+  Sym (σ* A* B*) = σ* (Sym A*) (λ a a' a* → Sym (B* a' a (sym a*)))
+  Sym (e ≃* e') = (Sym e) ≃* (Sym e')
+
+  sym : ∀ {A} {B} {e : Eq A B} {a} {b} → Rel (Sym e) a b → Rel e b a
+  sym {.*} {.*} {r*} δ = Sym δ
+  sym {(π A B)} {(π A' B')} {π* A* B*} δ = λ a' a a* → sym {B a'} {B' a} {_} (δ a a' (sym₂ a*)) -- FAIL?
+  sym {(σ A B)} {(σ A' B')} {σ* e B*} δ = {!!}
+  sym {(A ≃ B)} {(A' ≃ B')} {e ≃* e₁} δ = {!!}
+
+  sym₂ : ∀ {A} {B} {e : Eq A B} {a} {b} → Rel e a b → Rel (Sym e) b a
+  sym₂ {A} {B} {e} {a} {b} δ = {!!}
+
 record is-contr (A : U) : Set where
   field
     point : T A
-    path  : ∀ y → T (point ∼〈 ref A 〉 y)
+    path  : ∀ y → Rel (ref A) point y
 
 record Iso (A B : U) : Set₁ where
   field
-    R : T A → T B → U
-    R+ : ∀ x → is-contr (σ B (λ y → R x y))
-    R- : ∀ y → is-contr (σ A (λ x → R x y))
-
-iso' : ∀ {A} {B} → Iso A B → T A → T B
-iso' i a = π₁ (is-contr.point (Iso.R+ i a))
-
-inv' : ∀ {A} {B} → Iso A B → T B → T A
-inv' i b = π₁ (is-contr.point (Iso.R- i b))
+    iso : T A → T B
+    inv : T B → T A
+    isoinv : ∀ b → Rel (ref B) (iso (inv b)) b
+    inviso : ∀ a → Rel (ref A) (inv (iso a)) a
 
 mutual
   decode : ∀ {A} {B} → Eq A B → Iso A B
-  decode r* = {!!}
+  decode r* = record { 
+    iso = λ X → X; 
+    inv = λ X → X; 
+    isoinv = ref; 
+    inviso = ref }
   decode (π* A* B*) = record { 
-    R = λ f g → f ∼〈 π* A* B* 〉 g; 
-    R+ = λ f → record { 
-      point = (λ a' → iso' (decode (B* (inv' (decode A*) a') a' (decode-inv A* a'))) (f (inv' (decode A*) a'))) ,
-     (λ a a' a* → {!!}); -- FAIL Need f a ~ iso' (f (inv' a'))
-                         -- when decode-iso gives f a ∼ iso' (f a)
-                         -- Maybe could proceed with trans?  But see above.
-     path = {!!} }; R- = {!!} }
-  decode (σ* A* B*) = {!!}
-  decode (A* ≃* B*) = {!!}
+    iso = λ f a' → Iso.iso (decode (B* (Iso.inv (decode A*) a') a' (inv-decode A* a'))) (f (Iso.inv (decode A*) a')); 
+    inv = λ g a → Iso.inv (decode (B* a (Iso.iso (decode A*) a) (iso-decode A* a))) (g (Iso.iso (decode A*) a)); 
+    isoinv = {!!}; -- Needs a solution to goal 0
+    inviso = {!!} }
+  decode (σ* e B*) = {!!}
+  decode (e ≃* e') = record { 
+    iso = λ e´´ → {!!}; inv = {!!}; isoinv = {!!}; inviso = {!!} }
 
-  decode-iso : ∀ {A} {B} (e : Eq A B) (a : T A) → Rel e a (iso' (decode e) a)
-  decode-iso e a = {!!}
+  inv-decode : ∀ {A} {B} (e : Eq A B) (b : T B) → Rel e (Iso.inv (decode e) b) b
+  inv-decode r* A = ref A
+  inv-decode (π* A* B*) f = λ b b' b-is-b' → {!!}
+  inv-decode (σ* e B*) b = {!!}
+  inv-decode (e ≃* e₁) b = {!!}
 
-  decode-inv : ∀ {A} {B} (e : Eq A B) (b : T B) → Rel e (inv' (decode e) b) b
-  decode-inv e b = {!!}
-
-  Trans : ∀ {A} {B} {C} → Eq B C → Eq A B → Eq A C
-  Trans r* r* = r*
-  Trans (π* C* D*) (π* A* B*) = π* (Trans C* A*) (λ a a' a* → Trans (D* (inv' (decode C*) a') a' (decode-inv C* a')) (B* a (inv' (decode C*) a') {!!})) 
-    -- FAIL: a ∼〈 Trans C* A* 〉 a' → a ∼〈 A* 〉 inv (decode C*) a'
-  Trans (σ* e B*) f = {!!}
-  Trans (e ≃* e₁) f = {!!}
-
+  iso-decode : ∀ {A} {B} (e : Eq A B) (a : T A) → Rel e a (Iso.iso (decode e) a)
+  iso-decode r* A = ref A
+  iso-decode (π* A* B*) f = λ a a' a-is-a' → {!!}
+  iso-decode (σ* e B*) a = {!!}
+  iso-decode (e ≃* e₁) a = {!!}
