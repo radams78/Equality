@@ -74,14 +74,19 @@ inv' i b = π₁ (is-contr.point (Iso.R- i b))
 
 mutual
   decode : ∀ {A} {B} → Eq A B → Iso A B
-  decode r* = {!!}
+  decode r* = record { 
+    R = _≃_; 
+    R+ = λ A → record { 
+      point = A , (ref A); 
+      path = λ B → (π₂ B) , {!!} }; -- FAIL: Need to finish definition of ref
+    R- = λ A → record { 
+      point = A , (ref A); 
+      path = λ B → {!Sym (π₂ B)!} , {!!} } }
   decode (π* A* B*) = record { 
     R = λ f g → f ∼〈 π* A* B* 〉 g; 
     R+ = λ f → record { 
       point = (λ a' → iso' (decode (B* (inv' (decode A*) a') a' (decode-inv A* a'))) (f (inv' (decode A*) a'))) ,
-     (λ a a' a* → {!!}); -- FAIL Need f a ~ iso' (f (inv' a'))
-                         -- when decode-iso gives f a ∼ iso' (f a)
-                         -- Maybe could proceed with trans?  But see above.
+     (λ a a' a* → {!!}); 
      path = {!!} }; R- = {!!} }
   decode (σ* A* B*) = {!!}
   decode (A* ≃* B*) = {!!}
@@ -99,3 +104,11 @@ mutual
   Trans (σ* e B*) f = {!!}
   Trans (e ≃* e₁) f = {!!}
 
+  lm1 : ∀ {A} {B} {C} (q : Eq B C) (p : Eq A B) (a : T A) (c : T C) →
+    Rel (Trans q p) a c → Rel p a (inv' (decode q) c)
+  lm1 r* r* A C = λ x → x
+  lm1 (π* C* D*) (π* A* B*) f g = λ x a a' a* → lm1 (D* a' (iso' (decode C*) a') (decode-iso C* a')) (B* a a' a*) (f a) (g (iso' (decode C*) a')) {!!}
+    --FAIL: Need f a ∼〈 Trans (D* a' (iso C* a') (decode-iso C* a')) (B* a a' a*) 〉 g (iso C* a')
+    -- whene we have f a ∼〈 Trans (D* (inv C* (iso C* a')) (iso C* a') (decode-inv C* (iso C* a'))) (B* a (inv C* (iso C* a')) ?12 〉 g (iso C* a')
+  lm1 (σ* q B*) p a c = {!!}
+  lm1 (q ≃* q₁) p a c = {!!}
