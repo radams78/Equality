@@ -48,3 +48,9 @@ e ∼〈 _≃*_ {A} {A'} A* {B} {B'} B* 〉 e' =
 
 syntax π A (λ a → B) = π[ a ∶ A ] B
 syntax σ A (λ a → B) = σ[ a ∶ A ] B
+
+Ref : ∀ A → Eq A A
+Ref * = {!!}
+Ref (π A B) = π* (Ref A) {!!} -- FAIL
+Ref (σ A x) = {!!}
+Ref (A ≃ A₁) = {!!}

@@ -162,3 +162,25 @@ data tj Γ where
 ⟦ sigmastar A* B* ⟧ γ = σ* (⟦ A* ⟧ γ) (λ a a' a* → ⟦ B* ⟧ (((γ , a) , a') , a*))
 ⟦ eqstar A* B* ⟧ γ    = ⟦ A* ⟧ γ ≃* ⟦ B* ⟧ γ
 
+_C* : Context → Context
+left : ∀ {Γ} → ⟦ Γ C* ⟧C → ⟦ Γ ⟧C
+right : ∀ {Γ} → ⟦ Γ C* ⟧C → ⟦ Γ ⟧C
+l : ∀ {Γ} {A : Type Γ} (M : γ ∶ Γ ⊢ A γ) → γ ∶ Γ C* ⊢ A (left γ)
+r : ∀ {Γ} {A : Type Γ} (M : γ ∶ Γ ⊢ A γ) → γ ∶ Γ C* ⊢ A (right γ)
+_T* : ∀ {Γ} (A : γ ∶ Γ ⊢ *) → γ ∶ Γ C* ⊢ ⟦ A ⟧ (left γ) ≃ ⟦ A ⟧ (right γ)
+_* : ∀ {Γ} {A : γ ∶ Γ ⊢ *} (M : γ ∶ Γ ⊢ ⟦ A ⟧ γ) → γ ∶ Γ C* ⊢ ⟦ l M ⟧ γ ∼〈 ⟦ A T* ⟧ γ 〉 ⟦ r M ⟧ γ
+
+〈〉 C* = 〈〉
+(Γ ,, A) C* = (Γ C*) ,, (λ γ → A (left γ)) ,, (λ γ → A (right (proj₁ γ))) ,, (λ γ → proj₂ (proj₁ γ) ∼〈 {!⟦ A T* ⟧ ?!} 〉 proj₂ γ) -- FAIL
+
+l = {!!}
+
+r = {!!}
+
+A T* = {!!}
+
+M * = {!!}
+
+left {Γ} γ = {!!}
+
+right {Γ} γ = {!!}
