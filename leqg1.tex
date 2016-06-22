@@ -1,0 +1,238 @@
+\documentclass[12pt]{scrartcl}
+
+\input{amslambda}
+
+\usepackage{MnSymbol}
+
+\newcommand{\leqg}{{\lambda{\simeq}_2}}
+
+\newcommand{\unitt}{{\boldsymbol{1}}}
+%\newcommand{\ttt}{\mathtt{t\!t}}
+\newcommand{\idof}[1]{\mathsf{Id}{(#1)}}
+
+\newcommand{\props}{\mathsf{Prop}}
+\newcommand{\sets}{\mathsf{Set}}
+\newcommand{\grpds}{\mathsf{Grpd}}
+\newcommand{\TLRA}{\Lleftarrow\!\!\!\!\!\Rrightarrow}
+\newcommand{\gequiv}{\TLRA}
+\begin{document}
+\pagestyle{empty}
+\thispagestyle{empty}
+\section*{\fbox{$\boldsymbol{\leqg}$}}
+\subsubsection*{Syntax}
+\begin{align*}
+  t, A \quad ::= \quad \unitt &\mid \props \mid \sets \mid \grpds \mid
+  \sta_3\\
+&\mid P \lra Q \mid A \LRA B \mid G \gequiv H \mid (\Pi x {:} A) B \mid (\Sigma x {:} A) B \\
+&\mid x \mid \ttt \mid \lambda x {:}A.t \mid s t \mid (s,t) \mid \pi_1 t \mid \pi_2 t \\
+&\mid ({\sim}e) \mid e^+(t) \mid e^-(t) \mid \refl{t}\\
+&\mid \sta^{\sta} \mid \Pi^* [x,x',x^*] {:} A^*. B^*
+\mid \Sigma^* [x,x',x^*] {:} A^*. B^*
+\mid {\ee{}^*} A^* B^*
+\end{align*}
+\subsubsection*{Typing}
+The rules which appear below make use of the following
+abbreviations.
+\begin{align*}
+\sta_2 &\df \grpds &
+A \simeq_2 B &\df A \gequiv B \\
+\sta_1 &\df \sets &
+A \simeq_1 B &\df A  \LRA B\\
+\sta_0 &\df \props &
+A \simeq_0 B &\df A \lra B\\
+\sta_{-1} &\df \unitt &
+\idof{A} &\df \refl{A}\\
+ a \sim_e b &\df ({\sim} e) a b&
+a \ee A a' &\df a \sim_{\idof{A}} a'\\
+\end{align*}
+
+\begin{prooftree}
+  \AXC{$k \in \setof{0,1,2,3}$}
+  \UIC{$ \Gamma \vdash \sta_{k-1} : \sta_k$}
+\end{prooftree}
+
+\begin{prooftree}
+  \AXC{$\Gamma \vdash A : \sta_k$}
+  \AXC{$\Gamma, x : A \vdash B : \sta_k$}
+\AXC{$ k \in \setof{0,1,2}$}
+  \TIC{$\Gamma \vdash \Pi x{:}A.B : \sta_k$}
+\end{prooftree}
+\begin{prooftree}
+  \AXC{$\Gamma \vdash A : \sta_k$}
+  \AXC{$\Gamma, x : A \vdash B : \sta_k$}
+\AXC{$ k \in \setof{0,1,2}$}
+  \TIC{$\Gamma \vdash \Sigma x{:}A.B : \sta_k$}
+\end{prooftree}
+\begin{prooftree}
+\AXC{$\Gamma \vdash A : \sta_k$}
+\AXC{$\Gamma \vdash B : \sta_k$}
+\AXC{$ k \in \setof{0,1,2}$}
+\TIC{$\Gamma \vdash A \eeq_k B : \sta_k$}
+\end{prooftree}
+\begin{prooftree}
+\AXC{$\Gamma \vdash A : \sta_k$\qquad$\Gamma \vdash B : \sta_k$}
+\AXC{$\Gamma \vdash e : A \eeq_k B$}
+\AXC{$k \in \setof{0,1,2}$}
+\TIC{$\Gamma \vdash \;\,\sim_e\, : A \to B \to \sta_{k-1}$}
+\end{prooftree}
+\begin{prooftree}
+\AXC{$e : A \eeq_k B$}
+\AXC{$k \in \setof{0,1,2}$}
+\BIC{$e^+ : A \to B$}
+\noLine
+\UIC{$e^- : B \to A$}
+\end{prooftree}
+\begin{prooftree}
+  \AXC{$\Gamma \vdash A : \sta_k$}
+  \AXC{$\Gamma \vdash a : A$}
+  \AXC{$\Gamma \vdash k \in \setof{0,1,2}$}
+  \TIC{$\Gamma \vdash \refl{a} : a \ee A a$}
+\end{prooftree}
+
+
+\newpage
+\begin{prooftree}
+  \AXC{$\Gamma \vdash A : \sta_k$}
+  \AXC{$k \in \setof{0,1,2,3}$}
+  \BIC{$\Gamma, x:A \vdash x:A$}
+  \end{prooftree}
+  \begin{prooftree}
+  \AXC{$\Gamma \vdash M : A$}
+  \AXC{$\Gamma \vdash B : \sta_k$}
+  \AXC{$k \in \setof{0,1,2,3}$}
+  \TIC{$\Gamma, y:B \vdash M:A$}
+\end{prooftree}
+\begin{prooftree}
+  \AXC{$\Gamma \vdash A : *_k \qquad \Gamma \vdash B : *_k$}
+  \AXC{$\Gamma \vdash M : A $}
+  \AXC{$A = B \qquad k \in \setof{0,1,2}$}
+  \TIC{$\Gamma \vdash M : B$}
+\end{prooftree}
+\vspace{1cm}
+
+\begin{prooftree}
+\AXC{}
+\UIC{$\Gamma \vdash \ttt : \unitt$}
+\end{prooftree}
+\begin{prooftree}
+    \AXC{$\Gamma \vdash A : *$}
+    \AXC{$\Gamma, x : A \vdash B : *$}
+    \AXC{$\Gamma, x : A \vdash b : B$}
+    \TIC{$\Gamma \vdash \lambda x{:}A.b : \Pi x{:}A. B$}
+  \end{prooftree}
+  \begin{prooftree}
+    \AXC{$\Gamma \vdash A : *\quad \Gamma, x: A \vdash B : *$}
+    \AXC{$\Gamma \vdash f : \Pi x{:}A.B$}
+    \AXC{$\Gamma \vdash a : A$}
+    \TIC{$\Gamma \vdash f a : B[a/x]$}
+  \end{prooftree}
+\begin{prooftree}
+  \AXC{$\Gamma \vdash A : * \quad \Gamma, x:A \vdash B : *$}
+  \AXC{$\Gamma \vdash a : A$}
+  \AXC{$\Gamma \vdash b : B[a/x]$}
+  \TIC{$\Gamma \vdash (a,b) : \Sigma x{:}A.B$}
+\end{prooftree}
+  \begin{prooftree}
+    \AXC{$\Gamma \vdash A : \sta$}
+    \AXC{$\Gamma, x:A \vdash B : \sta$}
+    \AXC{$\Gamma \vdash p : \Sigma x{:}A.B$}
+    \TIC{$\begin{aligned}
+        \Gamma &\vdash \pi_1 p : A\\
+        \Gamma &\vdash \pi_2 p : B[\pi_1 p / x]
+      \end{aligned}$}
+    \end{prooftree}
+
+\vspace{1cm}
+
+\[
+  \AXC{$\Gamma, x{:}A \vdash t : B$}
+  \AXC{$\Gamma \vdash a : A$}
+  \BIC{$\Gamma \vdash t[a /x] : B[a/x]$} 
+  \DisplayProof
+\qquad
+  \AXC{$\Gamma, x{:}A \vdash t : B$}
+  \AXC{$\Gamma \vdash a^* : a \ee A a'$}
+  \BIC{$\Gamma \vdash t[a^* //x] : t[a/x] \sim_{B[a^*//x]} t[a'/x]$}
+  \DisplayProof
+\]
+
+\[  \AXC{$\Gamma, \Delta \vdash t : B$}
+  \AXC{$[\vec a/\vec x] \vdash \Gamma \RA \Delta$}
+  \BIC{$\Gamma \vdash t[\vec a/ \vec x] : B[\vec a/
+    \vec x]$} 
+  \DisplayProof
+\qquad
+  \AXC{$\Gamma, \Delta \vdash t : B$}
+  \AXC{$[\vec a^*//\vec x] : [\vec a/\vec x] \simeq [\vec a'/\vec x]
+    \vdash \Gamma \RA \Delta$}
+  \BIC{$\Gamma \vdash t[\vec a^*//\vec x] : t[\vec a/\vec x]
+    \sim_{B[\vec a^*//\vec x]}  t[\vec a'/\vec x]$}
+\DisplayProof
+\]
+\newcommand{\esub}{\between}
+\newcommand{\esubs}{{\between}{\!}^*}
+\[
+\AXC{\phantom{$\Delta[\vec a / \vec x]$}}
+\UIC{$\esub \vdash \Gamma \to \emptyset$}
+\DisplayProof
+\qquad
+\AXC{$[\vec a/\vec x] \vdash \Gamma \RA \Delta$}
+\AXC{$\Gamma, \Delta[\vec a/\vec x] \vdash   b[\vec a/\vec x] :
+  B[\vec a/\vec x]$}
+\BIC{$[\vec a, b / \vec x, y] \vdash \Gamma \RA \Delta, y:B$}
+\DisplayProof
+\]
+\[
+\AXC{\phantom{$\Delta[\vec a / \vec x]$}}
+\UIC{$\esubs :\esub \simeq \esub \vdash \Gamma \to \emptyset$}
+\DisplayProof
+\qquad
+\AXC{$\Bigg\{\begin{aligned}[]
+[\vec a, b/\vec x,y] &\vdash \Gamma \RA \Delta, y:B \\
+[\vec a', b'/\vec x,y] &\vdash \Gamma \RA \Delta, y:B
+\end{aligned} \Bigg\}
+$}
+\noLine
+\UIC{$[\vec a^*//\vec x] : [\vec a/\vec x] \simeq [\vec a'/\vec x]
+: \Gamma \RA \Delta$}
+\noLine
+\UIC{$\Gamma, \Delta[\vec a^*//\vec x] \vdash   b^* :
+  b \simeq_{B[\vec a^*//\vec x]} b'$}
+\UIC{$[\vec a^*, b^* // \vec x, y] : [\vec a/\vec x] \simeq [\vec
+  a'/\vec x] \vdash \Gamma \RA \Delta, y:B$}
+\DisplayProof
+\]
+\end{document}
+
+\begin{prooftree}
+\AXC{$$}
+\UIC{$\Gamma \vdash \sta^* : \sta \ee{} \sta$}
+\end{prooftree}
+\begin{prooftree}
+\AXC{$\left.\begin{cases}
+\Gamma \vdash A:*\\
+\Gamma \vdash A':*\\
+\Gamma \vdash A^* : A \ee{} A'
+\end{cases}\right\}$}
+\AXC{$\left.\begin{cases}
+\phantom{x'{:}A',x^*{:}x {\sim_{A^*}} x'}\Gamma, x:A\;\: \vdash B:*\\
+\phantom{x'{:}A',x^*{:}x {\sim_{A^*}} x'}\Gamma, x':A'\!\!\: \vdash B':*\\
+\Gamma, x{:}A, x'{:}A', x^*:x {\sim_{A^*}} x' \vdash B^* : B \ee{} B'
+\end{cases}\right\}$}
+\BIC{$\Gamma \vdash \Pi^*[x,x',x^*]: A^*.\, B^* : \Pi x{:}A.B \ee{} \Pi x'{:}A'.B'$}
+\noLine
+\UIC{$\Gamma \vdash \Sigma^*[x,x',x^*]: A^*.\, B^* : \Sigma x{:}A.B \ee{} \Sigma x'{:}A'.B'$}
+\end{prooftree}
+\begin{prooftree}
+  \AXC{$\left.\begin{cases}
+\Gamma \vdash A:*\\
+\Gamma \vdash A':*\\
+\Gamma \vdash A^* : A \ee{} A'
+\end{cases}\right\}$}
+\AXC{$\left.\begin{cases}
+\Gamma \vdash B:*\\
+\Gamma \vdash B':*\\
+\Gamma \vdash B^* : B \ee{} B'
+\end{cases}\right\}$}
+\BIC{$\Gamma \vdash \seq A^* B^* : (A \ee{} B) \ee{} (A' \ee{} B')$}
+\end{prooftree}

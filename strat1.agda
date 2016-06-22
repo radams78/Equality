@@ -1,20 +1,21 @@
-module Kipling where
+module strat1 where
+
+module strat1 where
 
 open import Function using (_∘_)
 open import Data.Unit
 open import Data.Product
 open import Data.Nat
-open import EqSim
-
-a = {!Unit!}
+-- open import stratUniv
 
 infixl 70 _,,_
 data Context : Set
 ⟦_⟧C : Context → Set
+
 -- The collection of contexts Γ
 data Context where
   〈〉 : Context
-  _,,_ : ∀ Γ → (⟦ Γ ⟧C → U) → Context
+  _,,_ : ∀ Γ → ((∀ n : nat) → ⟦ Γ ⟧C n → U) → Context
 
 -- The collection of Γ-types
 Type : Context → Set
@@ -28,6 +29,7 @@ Type Γ = ⟦ Γ ⟧C → U
 ⟦_⟧T : ∀ {Γ} → Type Γ → Set
 ⟦ A ⟧T = ∀ γ → T (A γ)
 
+{-
 data Var : ∀ (Γ : Context) (A : Type Γ) → Set where
   ⊥ : ∀ {Γ} {A} → Var (Γ ,, A) (A ∘ proj₁)
   ↑ : ∀ {Γ} {A} {B} → Var Γ B → Var (Γ ,, A) (B ∘ proj₁)
@@ -165,4 +167,4 @@ data tj Γ where -- "Typing judgement"
 ⟦ pistar A* B* ⟧ γ    = π* (⟦ A* ⟧ γ) (λ a a' a* → ⟦ B* ⟧ (((γ , a) , a') , a*))
 ⟦ sigmastar A* B* ⟧ γ = σ* (⟦ A* ⟧ γ) (λ a a' a* → ⟦ B* ⟧ (((γ , a) , a') , a*))
 ⟦ eqstar A* B* ⟧ γ    = ⟦ A* ⟧ γ ≃* ⟦ B* ⟧ γ
-
+-}
