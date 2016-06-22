@@ -7,6 +7,8 @@ open import Data.Nat
 --open import Universes.EqRel
 open import Universes.EqSim
 
+a = {!Unit!}
+
 infixl 70 _,,_
 data Context : Set
 ⟦_⟧C : Context → Set
