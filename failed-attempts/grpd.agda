@@ -1,31 +1,62 @@
-module Kipling where
+{-# OPTIONS --type-in-type #-}
+
+module grpd where
 
 open import Function using (_∘_)
 open import Data.Unit
 open import Data.Product
 open import Data.Nat
---open import Universes.EqRel
-open import Universes.EqSim
+-- open import stratUniv
 
-a = {!Unit!}
+record Setoid : Set where
+  field
+    El : Set
+
+record enrGrpd (Grp : Set) : Set₁ where
+  field
+    Ob : Set
+    _≃_ : Ob → Ob → Grp
+    -- add reflexivity & other stuff later
+
+record nFibra : ∀ {n} → (Grpd n) → Set where
+
+Grpd : ℕ → Set
+Grpd zero = Setoid
+Grpd (suc n) = enrGrpd (Grpd n)
+
+Ob : ∀ {n} → Grpd n → Set
+Ob {0} S = Setoid.El S
+Ob {suc n} G = enrGrpd.Ob G
 
 infixl 70 _,,_
 data Context : Set
-⟦_⟧C : Context → Set
+Type : Context → Set
+⟦_⟧C : Context → ∀ n → Grpd n
+
+UnitGrpd : ∀ n → Grpd n
+UnitGrpd 0 = record { El = Unit }
+UnitGrpd (suc n) = record { Ob = Unit; _≃_ = λ x x₁ → UnitGrpd n }
+
+postulate SigmaGrpd : ∀ {n} → ∀ (G : Grpd n) → nFibra G → Grpd n
+postulate FibOb : ∀ {n} → (G : Grpd n) → nFibra G → Ob G → Grpd n
+-- The collection of contexts Γ
 
 data Context where
   〈〉 : Context
-  _,,_ : ∀ Γ → (⟦ Γ ⟧C → U) → Context
+  _,,_ : ∀ Γ → (Type Γ) → Context
 
-⟦ 〈〉 ⟧C = Unit
-⟦ Γ ,, A ⟧C = Σ[ γ ∈ ⟦ Γ ⟧C ] T (A γ)
+-- The collection of Γ-types
+Type Γ = ∀ n → nFibra (⟦ Γ ⟧C n)
 
-Type : Context → Set
-Type Γ = ⟦ Γ ⟧C → U
+-- The collection of Γ-instances
+⟦ 〈〉 ⟧C n = UnitGrpd n
+⟦ Γ ,, A ⟧C n = SigmaGrpd (⟦ Γ ⟧C n) (A n)
 
-⟦_⟧T : ∀ {Γ} → Type Γ → Set
-⟦ A ⟧T = ∀ γ → T (A γ)
+-- The elements of a Γ-type on the meta-level
+⟦_⟧T : ∀ {Γ} → Type Γ → ℕ → Set
+⟦_⟧T {Γ} A n = ∀ γ → Ob (FibOb (⟦ Γ ⟧C n) (A n) γ)
 
+{-
 data Var : ∀ (Γ : Context) (A : Type Γ) → Set where
   ⊥ : ∀ {Γ} {A} → Var (Γ ,, A) (A ∘ proj₁)
   ↑ : ∀ {Γ} {A} {B} → Var Γ B → Var (Γ ,, A) (B ∘ proj₁)
@@ -53,7 +84,7 @@ tjt {suc n} Γ P = tjt {n} (Γ ,, (λ γ → proj₁ (P γ))) (λ γ → proj₂
 
 syntax tjt Γ (λ γ → A) = γ ∶ Γ ⊢ A
 
-data tj Γ where
+data tj Γ where -- "Typing judgement"
   star  : 
 
     -------------
@@ -163,4 +194,4 @@ data tj Γ where
 ⟦ pistar A* B* ⟧ γ    = π* (⟦ A* ⟧ γ) (λ a a' a* → ⟦ B* ⟧ (((γ , a) , a') , a*))
 ⟦ sigmastar A* B* ⟧ γ = σ* (⟦ A* ⟧ γ) (λ a a' a* → ⟦ B* ⟧ (((γ , a) , a') , a*))
 ⟦ eqstar A* B* ⟧ γ    = ⟦ A* ⟧ γ ≃* ⟦ B* ⟧ γ
-
+-}
