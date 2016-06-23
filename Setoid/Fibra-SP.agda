@@ -23,7 +23,7 @@ FibSP-p2 : ∀ {S T : Setoid} → FibSP (PRODS S T) → El S → FibSP T
 FibSP-p2 {S} {T} F s = 
   record { Fib = λ t → Fib F (s , t); Sub = λ x y p → Sub F (s , x) (s , y) (r S s , p) }
 
---The pullback of a fibration along a function is a fibration
+--The pullback of a fibration along a function is a fibration TODO: FibSP-p1 and FibSP-p2 are special cases
 pullback : ∀ {S} {S'} → FunS S S' → FibSP S' → FibSP S
 pullback f F = record { 
   Fib = λ x → Fib F (f · x) ; 

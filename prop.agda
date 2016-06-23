@@ -9,6 +9,12 @@ p ⇔ q = (p → q) × (q → p)
 refl-p : ∀ {p : Set} → p ⇔ p
 refl-p = (λ x → x) , (λ x → x)
 
+sym-p : ∀ {p q : Set} → p ⇔ q → q ⇔ p
+sym-p (a , b) = b , a
+
+trans-p : ∀ {p q r : Set} → p ⇔ q → q ⇔ r → p ⇔ r
+trans-p (a , b) (c , d) = (λ x → c (a x)) , (λ x → b (d x))
+
 ⇔* : ∀ {p1 p2} → (p1 ⇔ p2) → ∀ {q1 q2} → (q1 ⇔ q2) → (p1 ⇔ q1) ⇔ (p2 ⇔ q2)
 ⇔* {p1} {p2} p12 {q1} {q2} q12 = (
   (λ x → (λ z → proj₁ q12 (proj₁ x (proj₂ p12 z))) , (λ z → proj₁ p12 (proj₂ x (proj₂ q12 z)))) ,

@@ -1,33 +1,28 @@
-{-# OPTIONS --type-in-type #-}
+module Kipling where
 
-module setoid-model where
-
-open import setoid
+open import Function using (_∘_)
+open import Data.Unit
+open import Data.Product
+open import Data.Nat
+--open import Universes.EqRel
+open import Universes.EqSim
 
 infixl 70 _,,_
 data Context : Set
-Type : Context → Set
-⟦_⟧C : Context → Setoid
-
--- postulate Fib : (G : Setoid) → Fibra-SS G → Ob G → Setoid
--- The collection of contexts Γ
+⟦_⟧C : Context → Set
 
 data Context where
   〈〉 : Context
-  _,,_ : ∀ Γ → (Type Γ) → Context
+  _,,_ : ∀ Γ → (⟦ Γ ⟧C → U) → Context
 
--- The collection of Γ-types
-Type Γ = Fibration (⟦ Γ ⟧C)
+⟦ 〈〉 ⟧C = Unit
+⟦ Γ ,, A ⟧C = Σ[ γ ∈ ⟦ Γ ⟧C ] T (A γ)
 
--- The collection of Γ-instances
-⟦ 〈〉 ⟧C = UnitG
-⟦ Γ ,, A ⟧C = SigmaG ⟦ Γ ⟧C A
+Type : Context → Set
+Type Γ = ⟦ Γ ⟧C → U
 
--- The elements of a Γ-type on the meta-level
 ⟦_⟧T : ∀ {Γ} → Type Γ → Set
-⟦_⟧T {Γ} A = ∀ γ → Ob (Fib ⟦ Γ ⟧C A γ)
-
-{-
+⟦ A ⟧T = ∀ γ → T (A γ)
 
 data Var : ∀ (Γ : Context) (A : Type Γ) → Set where
   ⊥ : ∀ {Γ} {A} → Var (Γ ,, A) (A ∘ proj₁)
@@ -56,7 +51,7 @@ tjt {suc n} Γ P = tjt {n} (Γ ,, (λ γ → proj₁ (P γ))) (λ γ → proj₂
 
 syntax tjt Γ (λ γ → A) = γ ∶ Γ ⊢ A
 
-data tj Γ where -- "Typing judgement"
+data tj Γ where
   star  : 
 
     -------------
@@ -167,4 +162,25 @@ data tj Γ where -- "Typing judgement"
 ⟦ sigmastar A* B* ⟧ γ = σ* (⟦ A* ⟧ γ) (λ a a' a* → ⟦ B* ⟧ (((γ , a) , a') , a*))
 ⟦ eqstar A* B* ⟧ γ    = ⟦ A* ⟧ γ ≃* ⟦ B* ⟧ γ
 
--}
+_C* : Context → Context
+left : ∀ {Γ} → ⟦ Γ C* ⟧C → ⟦ Γ ⟧C
+right : ∀ {Γ} → ⟦ Γ C* ⟧C → ⟦ Γ ⟧C
+l : ∀ {Γ} {A : Type Γ} (M : γ ∶ Γ ⊢ A γ) → γ ∶ Γ C* ⊢ A (left γ)
+r : ∀ {Γ} {A : Type Γ} (M : γ ∶ Γ ⊢ A γ) → γ ∶ Γ C* ⊢ A (right γ)
+_T* : ∀ {Γ} (A : γ ∶ Γ ⊢ *) → γ ∶ Γ C* ⊢ ⟦ A ⟧ (left γ) ≃ ⟦ A ⟧ (right γ)
+_* : ∀ {Γ} {A : γ ∶ Γ ⊢ *} (M : γ ∶ Γ ⊢ ⟦ A ⟧ γ) → γ ∶ Γ C* ⊢ ⟦ l M ⟧ γ ∼〈 ⟦ A T* ⟧ γ 〉 ⟦ r M ⟧ γ
+
+〈〉 C* = 〈〉
+(Γ ,, A) C* = (Γ C*) ,, (λ γ → A (left γ)) ,, (λ γ → A (right (proj₁ γ))) ,, (λ γ → proj₂ (proj₁ γ) ∼〈 {!⟦ A T* ⟧ ?!} 〉 proj₂ γ) -- FAIL
+
+l = {!!}
+
+r = {!!}
+
+A T* = {!!}
+
+M * = {!!}
+
+left {Γ} γ = {!!}
+
+right {Γ} γ = {!!}

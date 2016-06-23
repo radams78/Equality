@@ -122,6 +122,9 @@ fill {A} {A'} {B} {B'} A* B* e = record {
         (proj₁ (iso-cong e (transport⁻¹-transport A* _) (r B _)) (transport⁻¹-iso e _)) ; 
     p = λ {(a' , p) → fill-lm' _ e A* _ p}}}
 
+comp-iso : ∀ {A B C} → Iso B C → Iso A B → Iso A C
+comp-iso = fill (id-iso _)
+
 fill-commutes : ∀ {A A' B B'} (A* : Iso A A') (B* : Iso B B') (e : Iso A B) → square-commutes A* B* e (fill A* B* e)
 fill-commutes A* B* e = λ {x} {x'} x~x' {y} {y'} y~y' → iso-cong e (transport⁻¹-unique A* x x' x~x') (transport⁻¹-unique B* y y' y~y')
 

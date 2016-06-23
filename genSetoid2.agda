@@ -1,9 +1,10 @@
 {-# OPTIONS --type-in-type #-}
 
-module genSetoid where
+module genSetoid2 where
 
 open import Setoid
 open import prop
+open import Data.Empty
 open import Data.Unit
 open import Data.Product
 open import Setoid.Fibra-SS
@@ -14,10 +15,30 @@ record Graph : Set₁ where
     Vertex : Set
     Edge   : Vertex → Vertex → Set
 
+  data Path : Vertex → Vertex → Set where
+    empty : ∀ x → Path x x
+    plus  : ∀ {x y z} → Edge x y → Path y z → Path x z
+    minus : ∀ {x y z} → Edge y x → Path y z → Path x z
+
   record Fibra-GS : Set where
     field
       FibGS : Vertex → Setoid
       SubGS : ∀ {x y} → Edge x y → Iso (FibGS x) (FibGS y)
+
+    SUBGS : ∀ {x y} → Path x y → Iso (FibGS x) (FibGS y)
+    SUBGS (empty x) = id-iso (FibGS x)
+    SUBGS (plus e p) = comp-iso (SUBGS p) (SubGS e)
+    SUBGS (minus e p) = fill (SubGS e) (SUBGS p) (id-iso _)
+
+    record Section : Set where
+      field
+        app : ∀ x → El (FibGS x)
+        wd  : ∀ x x' x* → app x ~< SubGS x* > app x'
+
+      postulate WD : ∀ x x' x* → app x ~< SUBGS x* > app x'
+{-      WD x .x (empty .x) = r (FibGS x) (app x)
+      WD x x' (plus x₁ x*) = {!!}
+      WD x x' (minus x₁ x*) = {!!} -}
   open Fibra-GS public
 
 open Graph public
@@ -31,7 +52,10 @@ Setoid2Graph S = record {
 Sigma-GS : ∀ G → Fibra-GS G → Graph
 Sigma-GS G A = record { 
   Vertex = Σ[ g ∈ Vertex G ] El (FibGS A g) ; 
-  Edge = λ { (g , a) (g' , a') → Σ[ g* ∈ Edge G g g' ] a ~< SubGS A g* > a'} }
+  Edge = λ { (g , a) (g' , a') → Σ[ g* ∈ Path G g g' ] a ~< SUBGS A g* > a'} }
+
+UnitG : Graph
+UnitG = record { Vertex = ⊤ ; Edge = λ _ _ → ⊥ }
 
 {- append : ∀ {X} {G : graphOver X} {x y z : X} → pathsIn G x y → pathsIn G y z → pathsIn G x z
 append (empty x) q = q

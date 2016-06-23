@@ -15,7 +15,10 @@ record Fibra-SS (B : Setoid) : Set where
 
 open Fibra-SS
 
-_∋_~[_]_ : ∀ {B : Setoid} (F : Fibra-SS B) {x y : El B} (_ : El (FibSS F x)) → (p : E B x y) → El (FibSS F y) → Set
+ElF : ∀ {B : Setoid} → Fibra-SS B → El B → Set
+ElF F A = El (FibSS F A)
+
+_∋_~[_]_ : ∀ {B : Setoid} (F : Fibra-SS B) {x y : El B} (_ : ElF F x) → (p : E B x y) → ElF F y → Set
 _∋_~[_]_ {B} F a p b = a ~< SubSS F p > b
 
 simFib* : ∀ {B : Setoid} (F : Fibra-SS B) {x x'} (x* : E B x x') {y y'} (y* : E B y y')
@@ -26,7 +29,7 @@ simFib* F x* y* e e' = sim* (SubSS F x*) (SubSS F y*) (SubSS F e) (SubSS F e') (
 
 Pi-SS : ∀ (B : Setoid) (F : Fibra-SS B) → Setoid
 Pi-SS B F = record {
-  El = Σ[ f ∈ (∀ (x : El B) → El (FibSS F x)) ] (∀ (x y : El B) → (p : E B x y) → F ∋ f x ~[ p ] f y );
+  El = Σ[ f ∈ (∀ (x : El B) → ElF F x) ] (∀ (x y : El B) → (p : E B x y) → F ∋ f x ~[ p ] f y );
   E = λ { (f , φ) (f' , φ') → {x y : El B} (p : E B x y) → F ∋ f x ~[ p ] f' y};
   r = λ {(f , φ) → φ _ _};
   E* = λ { {(f , φ)} {(f' , φ')} f* {(g , ψ)} {(g' , ψ')} g* →
