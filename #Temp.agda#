@@ -1,0 +1,11 @@
+module Temp where
+
+open import Data.Nat
+
+U : ℕ → Set
+T : ∀ {n} → U n → Set
+_≃〈_〉_ : 
+
+U n = {!!}
+
+T {n} A = {!!}

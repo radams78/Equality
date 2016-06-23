@@ -1,0 +1,21 @@
+\documentclass{article}
+
+\title{Type Theory with Native Homotopy Universes}
+
+\author{Robin Adams, Andrew Polonsky}
+\date{}
+\begin{document}
+
+\maketitle
+
+We present an implementation of a type system with explicit stratification of types into three homotopy levels, together with a model where the types are interpreted by propositions, setoids and groupoids.  We work in the Agda proof assistant.
+
+The type theory has an equality type $a \simeq_A b$ defined by recursion on the type $A$, in each case one level below $A$; thus, the equalities in a groupoid form a setoid, and the equalities in a setoid form a proposition.  Univalence becomes the definition of equality between two types.
+
+Our approach thus follows a "bottom-up" methodology.  It includes a formalization of the setoid model of Martin-L\"{o}f type theory, and definitions of all nine cases of what it is to be a fibration of groupoids (setoids, propositions) indexed by a groupoid (setoid, proposition).
+
+It is done in a modular way that should allow this work to generalize to a formalization of type theory with $(n+2)$-levels and an $n$-groupoid model.
+
+The formalization is available at \texttt{https://github.com/radams78/Equality}
+
+\end{document}
