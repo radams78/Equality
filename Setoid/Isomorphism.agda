@@ -55,12 +55,19 @@ transport⁻¹-transport e x = transport⁻¹-unique e x (transport e x) (iso-tr
 ISO : Setoid → Setoid → Setoid
 ISO S S' = record {
   El = Iso S S';
-  E = λ i j → ∀ x y → (Fib (Iso.R i) (x , y)) ⇔ (Fib (Iso.R j) (x , y));
+  E = λ i j → ∀ x y → (x ~< i > y ⇔ x ~< j > y);
   r = λ i → λ x y → refl-p;
   E* = λ f-is-g h-is-k → flip f-is-g h-is-k }
 
 _~*<_>_ : ∀ {S S'} {x x' : El S} {i i' : Iso S S'} {y y' : El S'} → E S x x' → E (ISO S S') i i' → E S' y y' → (x ~< i > y) ⇔ (x' ~< i' > y')
 _~*<_>_ {S} {S'} {x} {x'} {i} {i'} {y} {y'} x* i* y* = trans Prop:Set (i* x y) (Sub (Iso.R i') (x , y) (x' , y') (x* , y*))
+
+--Alternative characterisation of eqquality of isomorphims
+iso-eq : ∀ {A} {B} {φ ψ : Iso A B} →
+  (∀ {x} {x'} → E A x x' → ∀ {y} {y'} → E B y y' → (x ~< φ > y ⇔ x' ~< ψ > y'))
+  ⇔ E (ISO A B) φ ψ
+iso-eq {A} {B} {φ} {ψ} = (λ hyp a b → hyp (r A a) (r B b)) , (λ φ=ψ x=x' y=y' → 
+  _~*<_>_ {A} {B} {i = φ} {ψ} x=x' φ=ψ y=y')
 
 id-iso : ∀ (S : Setoid) → Iso S S
 id-iso = λ S → record { R = diagS S; R+ = ax4S S; R- = ax4S' S }
@@ -143,6 +150,9 @@ Iso* {A} {A'} A* {B} {B'} B* = record {
     c = (fill (inv-iso A*) (inv-iso B*) e) , 
         fill-commutes' A* B* e ; 
     p = λ {(e' , p) x' y' → p (iso-transport A* x') (iso-transport B* y')} } }
+
+Iso*-id : ∀ {A B : Setoid} → E (ISO (ISO A B) (ISO A B)) (Iso* (id-iso A) (id-iso B)) (id-iso (ISO A B))
+Iso*-id {A} {B} = λ φ ψ → iso-eq {A} {B} {φ} {ψ}
 
 sim* : ∀ {A A'} (A* : Iso A A') {B B'} (B* : Iso B B')
          (e : Iso A B) (e' : Iso A' B') (e* : e ~< Iso* A* B* > e')

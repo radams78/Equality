@@ -3,35 +3,46 @@
 module Syntax.Kipling where
 
 open import Data.Product
+open import prop
 open import Setoid
 open import Setoid.Unit
 open import Setoid.Isomorphism
 open import Setoid.Fibra-SS
-open import genSetoid2
+open import genSetoid3
 
 infixl 70 _,,_
 data Context : Set
 Type : Context → Set
+Prop : Context → Set
 ⟦_⟧C : Context → Graph
-
--- postulate Fib : (G : Setoid) → Fibra-SS G → Ob G → Setoid
--- The collection of contexts Γ
 
 data Context where
   〈〉 : Context
   _,,_ : ∀ Γ → (Type Γ) → Context
+  _,P_ : ∀ Γ → Prop Γ → Context
 
 -- The collection of Γ-types
-Type Γ = Fibra-GS (⟦ Γ ⟧C)
+Type Γ = Fibra-GS ⟦ Γ ⟧C
+Prop Γ = Fibra-GP (⟦ Γ ⟧C)
 
 -- The collection of Γ-instances
 ⟦ 〈〉 ⟧C = UnitG
-⟦ Γ ,, A ⟧C = Sigma-GS ⟦ Γ ⟧C A
+⟦ Γ ,, A ⟧C = Sigma-GS A
+⟦ Γ ,P φ ⟧C = Sigma-GP φ
+
+sublift : ∀ {Γ} {A} (B : Type Γ) {g} {g'} {a} {b} → 
+  Edge (Sigma-GS A) (g , a) (g' , b) → Iso (FibGS B g) (FibGS B g')
+sublift B (horiz e) = flatten (SubGS B e)
+sublift B (vert x) = id-iso (FibGS B _)
 
 lift : ∀ Γ A → Type Γ → Type (Γ ,, A)
 lift Γ A B = record { 
-  FibGS = λ {(γ , _) → FibGS B γ} ; 
-  SubGS = λ {(e , _) → SUBGS B e} }
+  FibGS = λ x → FibGS B (proj₁ x) ; 
+  SubGS = λ {x} {y} e → SUBGS B (π₁ A x y e) }
+
+liftS : ∀ {Γ} {A} {B} → Section {⟦ Γ ⟧C} B → Section {⟦ Γ ,, A ⟧C} (lift Γ A B)
+liftS {Γ} {A} {B} b = record { app = λ x → Section.app b (proj₁ x) ; 
+  wd = λ x x' x* → Section.WD b (proj₁ x) (proj₁ x') (π₁ A x x' x*) }
 
 -- The elements of a Γ-type on the meta-level
 ⟦_⊢_⟧T : ∀ Γ → Type Γ → Set
@@ -42,49 +53,79 @@ data Var : ∀ (Γ : Context) (A : Type Γ) → Set where
   ↑ : ∀ {Γ} {A} {B} → Var Γ B → Var (Γ ,, A) (lift Γ A B)
 
 ⟦_⟧V : ∀ {Γ} {A} → Var Γ A → Section A
-⟦ ⊥ ⟧V = record { app = λ {(_ , a) → a} ; wd = λ {_ _ (_ , a*) → a*} }
-⟦ ↑ x ⟧V = record { app = λ {(γ , _) → Section.app ⟦ x ⟧V γ} ; wd = λ {(γ , _) (γ' , _) (γ* , _) → Section.WD ⟦ x ⟧V γ γ' γ*} }
+⟦_⟧V {Γ ,, A} .{lift Γ A A} ⊥ = record { app = proj₂ ; wd = π₂ A }
+⟦ ↑ {Γ} {A} {B} x ⟧V = liftS {Γ} {A} ⟦ x ⟧V
 
 U : ∀ {Γ} → Type Γ
 U {Γ} = record { 
   FibGS = λ _ → Prop:Set ; 
-  SubGS = λ _ → id-iso Prop:Set }
+  SubGS = λ _ → emptyP SETOID Prop:Set }
 
-Pi : ∀ {Γ} A → Type (Γ ,, A) → Type Γ
+Fibapp1 : ∀ A B → Fibra-GS (Sigma-GS {A} B) → (a : Vertex A) → Fibra-SS (FibGS B a)
+Fibapp1 A B C a = record { 
+  FibSS = λ b → FibGS C (a , b) ; 
+  SubSS = λ a* → flatten (SubGS C (vert a*)) ; 
+  SubSSr = {!!} ; SubSS* = {!!} }
+
+{-Pi : ∀ {Γ} A → Type (Γ ,, A) → Type Γ
 Pi {Γ} A B = record { 
   FibGS = λ γ → Pi-SS (FibGS A γ) (record { 
     FibSS = λ a → FibGS B (γ , a) ; 
-    SubSS = λ a* → SubGS B (empty γ , a*) ; 
+    SubSS = λ a* → SubGS B (vert a*) ; 
     SubSSr = {!!} ; 
     SubSS* = {!!} });
   SubGS = λ x* → record { 
     R = record { 
-      Fib = λ {((f , fwd) , (g , gwd)) → ∀ a a' (a* : a ~< SubGS A x* > a') → f a ~< SubGS B (plus x* (empty _) , a*) > g a'} ; 
+      Fib = {!!} ;
       Sub = {!!} } ; R+ = {!!} ; R- = {!!} }
-  }
+  }-}
+
+Eq : ∀ {Γ} → Type Γ → Type Γ → Type Γ
+Eq A B = record { 
+  FibGS = λ γ → ISO (FibGS A γ) (FibGS B γ) ; 
+  SubGS = λ γ* → mapIso* (SubGS A γ*) (SubGS B γ*) }
+
+eq : ∀ {Γ} {A B : Type Γ} → Section A → Section (Eq {Γ} A B) → Section B → Prop Γ
+eq {Γ} {A} {B} a e b = record { FibGP = λ γ → Section.app a γ ~< Section.app e γ > Section.app b γ ; 
+                            SubGP = λ {γ} {γ'} γ* → sim* (flatten (SubGS A γ*)) (flatten (SubGS B γ*)) (Section.app e γ) (Section.app e γ') 
+   (proj₁ (flatten-mapIso* (SubGS A γ*) (SubGS B γ*) (Section.app e γ) (Section.app e γ')) (Section.wd e γ γ' γ*)) 
+   (Section.wd a γ γ' γ*) (Section.wd b γ γ' γ*) }
 
 data _⊢_ : ∀ Γ → Type Γ → Set
 ⟦_⟧ : ∀ {Γ} {A} → Γ ⊢ A → Section A
 
 data _⊢_ where
   var : ∀ {Γ} {A} → Var Γ A → Γ ⊢ A
-  lam : ∀ {Γ} {A} {B} → Γ ,, A ⊢ B → Γ ⊢ Pi {Γ} A B
-  app : ∀ {Γ} {A} {B} → (Γ ⊢ Pi {Γ} A B) → ∀ (M : Γ ⊢ A) → Γ ⊢ record { FibGS = λ γ → FibGS B (γ , Section.app ⟦ M ⟧ γ) ; 
-                                                                        SubGS = λ γ* → SubGS B ((plus γ* (empty _)) , (Section.wd ⟦ M ⟧ _ _ γ*)) }
+--  lam : ∀ {Γ} {A} {B} → Γ ,, A ⊢ B → Γ ⊢ Pi {Γ} A B
+--  app : ∀ {Γ} {A} {B} → (Γ ⊢ Pi {Γ} A B) → ∀ (M : Γ ⊢ A) → Γ ⊢ record { FibGS = λ γ → FibG
+--S B (γ , Section.app ⟦ M ⟧ γ) ; 
+--                                                                        SubGS = {!!} }
+  starstar : ∀ {Γ} → Γ ⊢ Eq {Γ} (U {Γ}) (U {Γ})
 
 ⟦ var x ⟧ = ⟦ x ⟧V
-⟦ lam M ⟧ = record { app = λ γ → (λ a → Section.app ⟦ M ⟧ (γ , a)) , 
-                                 (λ a a' a* → Section.wd ⟦ M ⟧ (γ , a) (γ , a') ((empty γ) , a*)) ; 
-                     wd = λ γ γ' γ* a a' a* → Section.wd ⟦ M ⟧ (γ , a) (γ' , a') ((plus γ* (empty _)) , a*) }
+{-⟦ lam M ⟧ = record { app = λ γ → (λ a → Section.app ⟦ M ⟧ (γ , a)) , 
+                                 (λ a a' a* → Section.wd ⟦ M ⟧ (γ , a) (γ , a') (vert a*)) ; 
+                     wd = λ γ γ' γ* a a' a* → Section.wd ⟦ M ⟧ (γ , a) (γ' , a') {!!} }
 ⟦ app M N ⟧ = record { app = λ γ → let (f , _) = Section.app ⟦ M ⟧ γ in f (Section.app ⟦ N ⟧ γ) ; 
-                       wd = λ γ γ' γ* → Section.wd ⟦ M ⟧ γ γ' γ* (Section.app ⟦ N ⟧ γ) (Section.app ⟦ N ⟧ γ') (Section.wd ⟦ N ⟧ γ γ' γ*) }
+                       wd = λ γ γ' γ* → Section.wd ⟦ M ⟧ γ γ' γ* (Section.app ⟦ N ⟧ γ) (Section.app ⟦ N ⟧ γ') (Section.wd ⟦ N ⟧ γ γ' γ*) } -}
+⟦ starstar ⟧ = record { app = λ _ → id-iso Prop:Set ; wd = λ _ _ _ → {!!} }
 
-subst : ∀ {Γ} {A} {B} (M : Γ ⊢ A) → Γ ,, A ⊢ B → Γ ⊢ record { FibGS = λ γ → FibGS B (γ , Section.app ⟦ M ⟧ γ) ; 
-                                                                        SubGS = λ γ* → SubGS B ((plus γ* (empty _)) , (Section.wd ⟦ M ⟧ _ _ γ*)) }
-subst {B = record { FibGS = _ ; SubGS = _ }} M (var ⊥) = {!!}
-subst {B = record { FibGS = _ ; SubGS = _ }} M (var (↑ x)) = {!var x!}
-subst {B = record { FibGS = _ ; SubGS = _ }} M (lam N) = {!!}
-subst {B = record { FibGS = _ ; SubGS = _ }} M (app N₁ N) = app (subst M N₁) {!!}
+PathC : Context → Context
+left : ∀ {Γ} → Type Γ → Type (PathC Γ)
+right : ∀ {Γ} → Type Γ → Type (PathC Γ)
+star : ∀ {Γ} (A : Type Γ) → Section (Eq {PathC Γ} (left A) (right A))
+
+PathC 〈〉 = 〈〉
+PathC (Γ ,, A) = PathC Γ ,, left A ,, lift _ _ (right A) ,P eq ⟦ ⊥ ⟧V 
+  {!liftS {PathC Γ ,, left A} {lift _ _ (right A)} {Eq (lift _ _ (left A)) (lift _ _ (right A))} ? !}
+  ⟦ ↑ ⊥ ⟧V
+PathC (Γ ,P φ) = {!!}
+
+left = {!!}
+
+right = {!!}
+
+star = {!!}
 
 {- Telescope : ℕ → Set
 Telescope zero = Setoid
