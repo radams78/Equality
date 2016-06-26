@@ -1,0 +1,1288 @@
+record
+{ FibGS =
+    λ γ →
+      record
+      { El = Iso (FibGS (_323 Γ A) γ) (FibGS (_337 Γ A) γ)
+      ; E =
+          λ i j →
+            (x : El (FibGS (_323 Γ A) γ)) (y : El (FibGS (_337 Γ A) γ)) →
+            Σ
+            (.Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y) →
+             .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y))
+            (λ x₁ →
+               .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y) →
+               .Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y))
+      ; r = λ i x y → (λ x₁ → x₁) , (λ x₁ → x₁)
+      ; E* =
+          λ {.x} {.x'} f-is-g {.y} {.y'} R⇔S →
+            (λ p x x₁ →
+               (λ z → proj₁ (R⇔S x x₁) (proj₁ (p x x₁) (proj₂ (f-is-g x x₁) z))) ,
+               (λ z → proj₁ (f-is-g x x₁) (proj₂ (p x x₁) (proj₂ (R⇔S x x₁) z))))
+            ,
+            (λ q x x₁ →
+               (λ z → proj₂ (R⇔S x x₁) (proj₁ (q x x₁) (proj₁ (f-is-g x x₁) z))) ,
+               (λ z → proj₂ (f-is-g x x₁) (proj₂ (q x x₁) (proj₁ (R⇔S x x₁) z))))
+      }
+; SubGS =
+    λ {.x} {.y} γ* X Xemp Xjust →
+      SubGS (_323 Γ A) γ*
+      (λ S T →
+         X
+         (record
+          { El = Iso S (FibGS (_337 Γ A) .x)
+          ; E =
+              λ i j →
+                (x : El S) (y : El (FibGS (_337 Γ A) .x)) →
+                Σ
+                (.Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y) →
+                 .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y))
+                (λ x₁ →
+                   .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y) →
+                   .Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y))
+          ; r = λ i x y → (λ x₁ → x₁) , (λ x₁ → x₁)
+          ; E* =
+              λ {.x₁} {.x'} f-is-g {.y₁} {.y'} R⇔S →
+                (λ p x x₁ →
+                   (λ z → proj₁ (R⇔S x x₁) (proj₁ (p x x₁) (proj₂ (f-is-g x x₁) z))) ,
+                   (λ z → proj₁ (f-is-g x x₁) (proj₂ (p x x₁) (proj₂ (R⇔S x x₁) z))))
+                ,
+                (λ q x x₁ →
+                   (λ z → proj₂ (R⇔S x x₁) (proj₁ (q x x₁) (proj₁ (f-is-g x x₁) z))) ,
+                   (λ z → proj₂ (f-is-g x x₁) (proj₂ (q x x₁) (proj₁ (R⇔S x x₁) z))))
+          })
+         (record
+          { El = Iso T (FibGS (_337 Γ A) .y)
+          ; E =
+              λ i j →
+                (x : El T) (y : El (FibGS (_337 Γ A) .y)) →
+                Σ
+                (.Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y) →
+                 .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y))
+                (λ x₁ →
+                   .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y) →
+                   .Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y))
+          ; r = λ i x y → (λ x₁ → x₁) , (λ x₁ → x₁)
+          ; E* =
+              λ {.x₁} {.x'} f-is-g {.y₁} {.y'} R⇔S →
+                (λ p x x₁ →
+                   (λ z → proj₁ (R⇔S x x₁) (proj₁ (p x x₁) (proj₂ (f-is-g x x₁) z))) ,
+                   (λ z → proj₁ (f-is-g x x₁) (proj₂ (p x x₁) (proj₂ (R⇔S x x₁) z))))
+                ,
+                (λ q x x₁ →
+                   (λ z → proj₂ (R⇔S x x₁) (proj₁ (q x x₁) (proj₁ (f-is-g x x₁) z))) ,
+                   (λ z → proj₂ (f-is-g x x₁) (proj₂ (q x x₁) (proj₁ (R⇔S x x₁) z))))
+          }))
+      (λ FibGSAx →
+         SubGS (_337 Γ A) γ*
+         (λ S T →
+            X
+            (record
+             { El = Iso FibGSAx S
+             ; E =
+                 λ i j →
+                   (x : El FibGSAx) (y : El S) →
+                   Σ
+                   (.Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y) →
+                    .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y))
+                   (λ x₁ →
+                      .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y) →
+                      .Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y))
+             ; r = λ i x y → (λ x₁ → x₁) , (λ x₁ → x₁)
+             ; E* =
+                 λ {.x₁} {.x'} f-is-g {.y₁} {.y'} R⇔S →
+                   (λ p x x₁ →
+                      (λ z → proj₁ (R⇔S x x₁) (proj₁ (p x x₁) (proj₂ (f-is-g x x₁) z))) ,
+                      (λ z → proj₁ (f-is-g x x₁) (proj₂ (p x x₁) (proj₂ (R⇔S x x₁) z))))
+                   ,
+                   (λ q x x₁ →
+                      (λ z → proj₂ (R⇔S x x₁) (proj₁ (q x x₁) (proj₁ (f-is-g x x₁) z))) ,
+                      (λ z → proj₂ (f-is-g x x₁) (proj₂ (q x x₁) (proj₁ (R⇔S x x₁) z))))
+             })
+            (record
+             { El = Iso FibGSAx T
+             ; E =
+                 λ i j →
+                   (x : El FibGSAx) (y : El T) →
+                   Σ
+                   (.Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y) →
+                    .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y))
+                   (λ x₁ →
+                      .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y) →
+                      .Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y))
+             ; r = λ i x y → (λ x₁ → x₁) , (λ x₁ → x₁)
+             ; E* =
+                 λ {.x₁} {.x'} f-is-g {.y₁} {.y'} R⇔S →
+                   (λ p x x₁ →
+                      (λ z → proj₁ (R⇔S x x₁) (proj₁ (p x x₁) (proj₂ (f-is-g x x₁) z))) ,
+                      (λ z → proj₁ (f-is-g x x₁) (proj₂ (p x x₁) (proj₂ (R⇔S x x₁) z))))
+                   ,
+                   (λ q x x₁ →
+                      (λ z → proj₂ (R⇔S x x₁) (proj₁ (q x x₁) (proj₁ (f-is-g x x₁) z))) ,
+                      (λ z → proj₂ (f-is-g x x₁) (proj₂ (q x x₁) (proj₁ (R⇔S x x₁) z))))
+             }))
+         (λ x →
+            Xemp
+            (record
+             { El = Iso FibGSAx x
+             ; E =
+                 λ i j →
+                   (x₁ : El FibGSAx) (y : El x) →
+                   Σ
+                   (.Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x₁ , y) →
+                    .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x₁ , y))
+                   (λ x₂ →
+                      .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x₁ , y) →
+                      .Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x₁ , y))
+             ; r = λ i x₁ y → (λ x₂ → x₂) , (λ x₂ → x₂)
+             ; E* =
+                 λ {.x₁} {.x'} f-is-g {.y₁} {.y'} R⇔S →
+                   (λ p x₁ x₂ →
+                      (λ z →
+                         proj₁ (R⇔S x₁ x₂) (proj₁ (p x₁ x₂) (proj₂ (f-is-g x₁ x₂) z)))
+                      ,
+                      (λ z →
+                         proj₁ (f-is-g x₁ x₂) (proj₂ (p x₁ x₂) (proj₂ (R⇔S x₁ x₂) z))))
+                   ,
+                   (λ q x₁ x₂ →
+                      (λ z →
+                         proj₂ (R⇔S x₁ x₂) (proj₁ (q x₁ x₂) (proj₁ (f-is-g x₁ x₂) z)))
+                      ,
+                      (λ z →
+                         proj₂ (f-is-g x₁ x₂) (proj₂ (q x₁ x₂) (proj₁ (R⇔S x₁ x₂) z))))
+             }))
+         (λ {.x₁} {.y₁} φ →
+            Xjust
+            (record
+             { R =
+                 record
+                 { Fib =
+                     λ ee' →
+                       {x x' : El FibGSAx} →
+                       E FibGSAx x x' →
+                       {y : El .x₁} {y' : El .y₁} →
+                       .Setoid.Fibra-SP.FibSP.Fib (Iso.R φ) (y , y') →
+                       Σ
+                       (.Setoid.Fibra-SP.FibSP.Fib (Iso.R (proj₁ ee')) (x , y) →
+                        .Setoid.Fibra-SP.FibSP.Fib (Iso.R (proj₂ ee')) (x' , y'))
+                       (λ x₁ →
+                          .Setoid.Fibra-SP.FibSP.Fib (Iso.R (proj₂ ee')) (x' , y') →
+                          .Setoid.Fibra-SP.FibSP.Fib (Iso.R (proj₁ ee')) (x , y))
+                 ; Sub =
+                     λ ii' jj' i=ji'=j' →
+                       (λ p {.x₂} {.x₃} q {.x₄} {.x₅} q₁ →
+                          (λ z →
+                             proj₁ (proj₂ i=ji'=j' .x₃ .x₅)
+                             (proj₁ (p q q₁) (proj₂ (proj₁ i=ji'=j' .x₂ .x₄) z)))
+                          ,
+                          (λ z →
+                             proj₁ (proj₁ i=ji'=j' .x₂ .x₄)
+                             (proj₂ (p q q₁) (proj₂ (proj₂ i=ji'=j' .x₃ .x₅) z))))
+                       ,
+                       (λ q {.x₂} {.x₃} p {.x₄} {.x₅} p₁ →
+                          (λ z →
+                             proj₂ (proj₂ i=ji'=j' .x₃ .x₅)
+                             (proj₁ (q p p₁) (proj₁ (proj₁ i=ji'=j' .x₂ .x₄) z)))
+                          ,
+                          (λ z →
+                             proj₂ (proj₁ i=ji'=j' .x₂ .x₄)
+                             (proj₂ (q p p₁) (proj₁ (proj₂ i=ji'=j' .x₃ .x₅) z))))
+                 }
+             ; R+ =
+                 λ e →
+                   record
+                   { c =
+                       record
+                       { R =
+                           record
+                           { Fib =
+                               λ x →
+                                 .Setoid.Fibra-SP.FibSP.Fib (Iso.R e)
+                                 (proj₁ x , proj₁ (ContrS.c (Iso.R- φ (proj₂ x))))
+                           ; Sub =
+                               λ x x' x* →
+                                 .Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                 (proj₁ x , proj₁ (ContrS.c (Iso.R- φ (proj₂ x))))
+                                 (proj₁ x' , proj₁ (ContrS.c (Iso.R- φ (proj₂ x'))))
+                                 (proj₁ (E* FibGSAx (r FibGSAx (proj₁ x)) (proj₁ x*))
+                                  (r FibGSAx (proj₁ x))
+                                  ,
+                                  ContrS.p (Iso.R- φ (proj₂ x'))
+                                  (proj₁ (ContrS.c (Iso.R- φ (proj₂ x))) ,
+                                   proj₁
+                                   (.Setoid.Fibra-SP.FibSP.Sub (Iso.R φ)
+                                    (proj₁ (ContrS.c (Iso.R- φ (proj₂ x))) , proj₂ x)
+                                    (proj₁ (ContrS.c (Iso.R- φ (proj₂ x))) , proj₂ x')
+                                    (r .x₁ (proj₁ (ContrS.c (Iso.R- φ (proj₂ x)))) , proj₂ x*))
+                                   (proj₂ (ContrS.c (Iso.R- φ (proj₂ x))))))
+                           }
+                       ; R+ =
+                           λ a' →
+                             record
+                             { c =
+                                 proj₁ (ContrS.c (Iso.R+ φ (proj₁ (ContrS.c (Iso.R+ e a'))))) ,
+                                 proj₁
+                                 (.Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                  (a' , proj₁ (ContrS.c (Iso.R+ e a')))
+                                  (a' ,
+                                   proj₁
+                                   (ContrS.c
+                                    (Iso.R- φ
+                                     (proj₁
+                                      (ContrS.c (Iso.R+ φ (proj₁ (ContrS.c (Iso.R+ e a')))))))))
+                                  (r FibGSAx a' ,
+                                   ContrS.p
+                                   (Iso.R- φ
+                                    (proj₁ (ContrS.c (Iso.R+ φ (proj₁ (ContrS.c (Iso.R+ e a')))))))
+                                   (proj₁ (ContrS.c (Iso.R+ e a')) ,
+                                    proj₂ (ContrS.c (Iso.R+ φ (proj₁ (ContrS.c (Iso.R+ e a'))))))))
+                                 (proj₂ (ContrS.c (Iso.R+ e a')))
+                             ; p =
+                                 λ b'p →
+                                   proj₂
+                                   (E* .y₁
+                                    (ContrS.p (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ b'p)))))
+                                     (proj₁ b'p , proj₂ (ContrS.c (Iso.R- φ (proj₁ b'p)))))
+                                    (r .y₁
+                                     (proj₁
+                                      (ContrS.c (Iso.R+ φ (proj₁ (ContrS.c (Iso.R+ e a'))))))))
+                                   (ContrS.p (Iso.R+ φ (proj₁ (ContrS.c (Iso.R+ e a'))))
+                                    (proj₁
+                                     (ContrS.c (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ b'p))))))
+                                     ,
+                                     proj₁
+                                     (.Setoid.Fibra-SP.FibSP.Sub (Iso.R φ)
+                                      (proj₁ (ContrS.c (Iso.R- φ (proj₁ b'p))) ,
+                                       proj₁
+                                       (ContrS.c
+                                        (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ b'p)))))))
+                                      (proj₁ (ContrS.c (Iso.R+ e a')) ,
+                                       proj₁
+                                       (ContrS.c
+                                        (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ b'p)))))))
+                                      (ContrS.p (Iso.R+ e a')
+                                       (proj₁ (ContrS.c (Iso.R- φ (proj₁ b'p))) , proj₂ b'p)
+                                       ,
+                                       r .y₁
+                                       (proj₁
+                                        (ContrS.c
+                                         (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ b'p)))))))))
+                                     (proj₂
+                                      (ContrS.c
+                                       (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ b'p)))))))))
+                             }
+                       ; R- =
+                           λ b' →
+                             record
+                             { c =
+                                 proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- φ b'))))) ,
+                                 proj₁
+                                 (.Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                  (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- φ b'))))) ,
+                                   proj₁ (ContrS.c (Iso.R- φ b')))
+                                  (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- φ b'))))) ,
+                                   proj₁ (ContrS.c (Iso.R- φ b')))
+                                  (r FibGSAx
+                                   (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- φ b'))))))
+                                   , r .x₁ (proj₁ (ContrS.c (Iso.R- φ b')))))
+                                 (proj₂ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- φ b'))))))
+                             ; p =
+                                 λ a'p →
+                                   proj₂
+                                   (E* FibGSAx
+                                    (proj₁
+                                     (E* FibGSAx (r FibGSAx (proj₁ a'p)) (r FibGSAx (proj₁ a'p)))
+                                     (r FibGSAx (proj₁ a'p)))
+                                    (r FibGSAx
+                                     (proj₁
+                                      (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- φ b'))))))))
+                                   (proj₁
+                                    (E* FibGSAx
+                                     (proj₁
+                                      (E* FibGSAx
+                                       (ContrS.p (Iso.R- e (proj₁ (ContrS.c (Iso.R- φ b'))))
+                                        (proj₁ a'p , proj₂ a'p))
+                                       (r FibGSAx (proj₁ a'p)))
+                                      (r FibGSAx (proj₁ a'p)))
+                                     (r FibGSAx
+                                      (proj₁
+                                       (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- φ b'))))))))
+                                    (r FibGSAx
+                                     (proj₁
+                                      (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- φ b'))))))))
+                             }
+                       }
+                       ,
+                       (λ {x} {x'} x~x' {y} {y'} y~y' →
+                          .Setoid.Fibra-SP.FibSP.Sub (Iso.R e) (x , y)
+                          (x' , proj₁ (ContrS.c (Iso.R- φ y')))
+                          (x~x' , ContrS.p (Iso.R- φ y') (y , y~y')))
+                   ; p =
+                       λ e'p x' y' →
+                         (λ z →
+                            proj₂ (proj₂ e'p (r FibGSAx x') (proj₂ (ContrS.c (Iso.R- φ y'))))
+                            z)
+                         ,
+                         (λ z →
+                            proj₁ (proj₂ e'p (r FibGSAx x') (proj₂ (ContrS.c (Iso.R- φ y'))))
+                            z)
+                   }
+             ; R- =
+                 λ e →
+                   record
+                   { c =
+                       record
+                       { R =
+                           record
+                           { Fib =
+                               λ x →
+                                 .Setoid.Fibra-SP.FibSP.Fib (Iso.R e)
+                                 (proj₁ x , proj₁ (ContrS.c (Iso.R+ φ (proj₂ x))))
+                           ; Sub =
+                               λ x x' x* →
+                                 .Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                 (proj₁ x , proj₁ (ContrS.c (Iso.R+ φ (proj₂ x))))
+                                 (proj₁ x' , proj₁ (ContrS.c (Iso.R+ φ (proj₂ x'))))
+                                 (proj₁
+                                  (E* FibGSAx
+                                   (proj₁ (E* FibGSAx (proj₁ x*) (r FibGSAx (proj₁ x)))
+                                    (r FibGSAx (proj₁ x)))
+                                   (r FibGSAx (proj₁ x')))
+                                  (r FibGSAx (proj₁ x'))
+                                  ,
+                                  ContrS.p (Iso.R+ φ (proj₂ x'))
+                                  (proj₁ (ContrS.c (Iso.R+ φ (proj₂ x))) ,
+                                   proj₁
+                                   (.Setoid.Fibra-SP.FibSP.Sub (Iso.R φ)
+                                    (proj₂ x , proj₁ (ContrS.c (Iso.R+ φ (proj₂ x))))
+                                    (proj₂ x' , proj₁ (ContrS.c (Iso.R+ φ (proj₂ x))))
+                                    (proj₂ x* , r .y₁ (proj₁ (ContrS.c (Iso.R+ φ (proj₂ x))))))
+                                   (proj₂ (ContrS.c (Iso.R+ φ (proj₂ x))))))
+                           }
+                       ; R+ =
+                           λ a' →
+                             record
+                             { c =
+                                 proj₁ (ContrS.c (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ e a'))))) ,
+                                 proj₁
+                                 (.Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                  (a' , proj₁ (ContrS.c (Iso.R+ e a')))
+                                  (a' ,
+                                   proj₁
+                                   (ContrS.c
+                                    (Iso.R+ φ
+                                     (proj₁
+                                      (ContrS.c (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ e a')))))))))
+                                  (r FibGSAx a' ,
+                                   ContrS.p
+                                   (Iso.R+ φ
+                                    (proj₁ (ContrS.c (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ e a')))))))
+                                   (proj₁ (ContrS.c (Iso.R+ e a')) ,
+                                    proj₂ (ContrS.c (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ e a'))))))))
+                                 (proj₂ (ContrS.c (Iso.R+ e a')))
+                             ; p =
+                                 λ b'p →
+                                   proj₂
+                                   (E* .x₁
+                                    (ContrS.p (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ b'p)))))
+                                     (proj₁ b'p , proj₂ (ContrS.c (Iso.R+ φ (proj₁ b'p)))))
+                                    (r .x₁
+                                     (proj₁
+                                      (ContrS.c (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ e a'))))))))
+                                   (ContrS.p (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ e a'))))
+                                    (proj₁
+                                     (ContrS.c (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ b'p))))))
+                                     ,
+                                     proj₁
+                                     (.Setoid.Fibra-SP.FibSP.Sub (Iso.R φ)
+                                      (proj₁
+                                       (ContrS.c
+                                        (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ b'p))))))
+                                       , proj₁ (ContrS.c (Iso.R+ φ (proj₁ b'p))))
+                                      (proj₁
+                                       (ContrS.c
+                                        (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ b'p))))))
+                                       , proj₁ (ContrS.c (Iso.R+ e a')))
+                                      (r .x₁
+                                       (proj₁
+                                        (ContrS.c
+                                         (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ b'p)))))))
+                                       ,
+                                       ContrS.p (Iso.R+ e a')
+                                       (proj₁ (ContrS.c (Iso.R+ φ (proj₁ b'p))) , proj₂ b'p)))
+                                     (proj₂
+                                      (ContrS.c
+                                       (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ b'p)))))))))
+                             }
+                       ; R- =
+                           λ b' →
+                             record
+                             { c =
+                                 proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ φ b'))))) ,
+                                 proj₁
+                                 (.Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                  (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ φ b'))))) ,
+                                   proj₁ (ContrS.c (Iso.R+ φ b')))
+                                  (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ φ b'))))) ,
+                                   proj₁ (ContrS.c (Iso.R+ φ b')))
+                                  (proj₁
+                                   (E* FibGSAx
+                                    (r FibGSAx
+                                     (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ φ b')))))))
+                                    (r FibGSAx
+                                     (proj₁
+                                      (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ φ b'))))))))
+                                   (r FibGSAx
+                                    (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ φ b')))))))
+                                   , r .y₁ (proj₁ (ContrS.c (Iso.R+ φ b')))))
+                                 (proj₂ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ φ b'))))))
+                             ; p =
+                                 λ a'p →
+                                   proj₂
+                                   (E* FibGSAx (r FibGSAx (proj₁ a'p))
+                                    (r FibGSAx
+                                     (proj₁
+                                      (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ φ b'))))))))
+                                   (proj₁
+                                    (E* FibGSAx (r FibGSAx (proj₁ a'p))
+                                     (ContrS.p (Iso.R- e (proj₁ (ContrS.c (Iso.R+ φ b'))))
+                                      (proj₁ a'p , proj₂ a'p)))
+                                    (r FibGSAx (proj₁ a'p)))
+                             }
+                       }
+                       ,
+                       (λ {x} {x'} x~x' {y} {y'} y~y' →
+                          .Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                          (x , proj₁ (ContrS.c (Iso.R+ φ y))) (x' , y')
+                          (proj₁
+                           (E* FibGSAx (proj₁ (E* FibGSAx x~x' (r FibGSAx x)) (r FibGSAx x))
+                            (r FibGSAx x'))
+                           (r FibGSAx x')
+                           ,
+                           proj₁ (E* .y₁ (ContrS.p (Iso.R+ φ y) (y' , y~y')) (r .y₁ y'))
+                           (r .y₁ y')))
+                   ; p =
+                       λ e'p x' y' →
+                         proj₂ e'p (r FibGSAx x') (proj₂ (ContrS.c (Iso.R+ φ y')))
+                   }
+             })))
+      (λ {.x₁} {.y₁} φ →
+         SubGS (_337 Γ A) γ*
+         (λ S T →
+            X
+            (record
+             { El = Iso .x₁ S
+             ; E =
+                 λ i j →
+                   (x : El .x₁) (y : El S) →
+                   Σ
+                   (.Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y) →
+                    .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y))
+                   (λ x₁ →
+                      .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y) →
+                      .Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y))
+             ; r = λ i x y → (λ x₁ → x₁) , (λ x₁ → x₁)
+             ; E* =
+                 λ {.x₂} {.x'} f-is-g {.y₂} {.y'} R⇔S →
+                   (λ p x x₁ →
+                      (λ z → proj₁ (R⇔S x x₁) (proj₁ (p x x₁) (proj₂ (f-is-g x x₁) z))) ,
+                      (λ z → proj₁ (f-is-g x x₁) (proj₂ (p x x₁) (proj₂ (R⇔S x x₁) z))))
+                   ,
+                   (λ q x x₁ →
+                      (λ z → proj₂ (R⇔S x x₁) (proj₁ (q x x₁) (proj₁ (f-is-g x x₁) z))) ,
+                      (λ z → proj₂ (f-is-g x x₁) (proj₂ (q x x₁) (proj₁ (R⇔S x x₁) z))))
+             })
+            (record
+             { El = Iso .y₁ T
+             ; E =
+                 λ i j →
+                   (x : El .y₁) (y : El T) →
+                   Σ
+                   (.Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y) →
+                    .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y))
+                   (λ x₁ →
+                      .Setoid.Fibra-SP.FibSP.Fib (Iso.R j) (x , y) →
+                      .Setoid.Fibra-SP.FibSP.Fib (Iso.R i) (x , y))
+             ; r = λ i x y → (λ x₁ → x₁) , (λ x₁ → x₁)
+             ; E* =
+                 λ {.x₂} {.x'} f-is-g {.y₂} {.y'} R⇔S →
+                   (λ p x x₁ →
+                      (λ z → proj₁ (R⇔S x x₁) (proj₁ (p x x₁) (proj₂ (f-is-g x x₁) z))) ,
+                      (λ z → proj₁ (f-is-g x x₁) (proj₂ (p x x₁) (proj₂ (R⇔S x x₁) z))))
+                   ,
+                   (λ q x x₁ →
+                      (λ z → proj₂ (R⇔S x x₁) (proj₁ (q x x₁) (proj₁ (f-is-g x x₁) z))) ,
+                      (λ z → proj₂ (f-is-g x x₁) (proj₂ (q x x₁) (proj₁ (R⇔S x x₁) z))))
+             }))
+         (λ x →
+            Xjust
+            (record
+             { R =
+                 record
+                 { Fib =
+                     λ ee' →
+                       {x = x₁ : El .x₁} {x' : El .y₁} →
+                       .Setoid.Fibra-SP.FibSP.Fib (Iso.R φ) (x₁ , x') →
+                       {y y' : El x} →
+                       E x y y' →
+                       Σ
+                       (.Setoid.Fibra-SP.FibSP.Fib (Iso.R (proj₁ ee')) (x₁ , y) →
+                        .Setoid.Fibra-SP.FibSP.Fib (Iso.R (proj₂ ee')) (x' , y'))
+                       (λ x₂ →
+                          .Setoid.Fibra-SP.FibSP.Fib (Iso.R (proj₂ ee')) (x' , y') →
+                          .Setoid.Fibra-SP.FibSP.Fib (Iso.R (proj₁ ee')) (x₁ , y))
+                 ; Sub =
+                     λ ii' jj' i=ji'=j' →
+                       (λ p {.x₂} {.x₃} q {.x₄} {.x₅} q₁ →
+                          (λ z →
+                             proj₁ (proj₂ i=ji'=j' .x₃ .x₅)
+                             (proj₁ (p q q₁) (proj₂ (proj₁ i=ji'=j' .x₂ .x₄) z)))
+                          ,
+                          (λ z →
+                             proj₁ (proj₁ i=ji'=j' .x₂ .x₄)
+                             (proj₂ (p q q₁) (proj₂ (proj₂ i=ji'=j' .x₃ .x₅) z))))
+                       ,
+                       (λ q {.x₂} {.x₃} p {.x₄} {.x₅} p₁ →
+                          (λ z →
+                             proj₂ (proj₂ i=ji'=j' .x₃ .x₅)
+                             (proj₁ (q p p₁) (proj₁ (proj₁ i=ji'=j' .x₂ .x₄) z)))
+                          ,
+                          (λ z →
+                             proj₂ (proj₁ i=ji'=j' .x₂ .x₄)
+                             (proj₂ (q p p₁) (proj₁ (proj₂ i=ji'=j' .x₃ .x₅) z))))
+                 }
+             ; R+ =
+                 λ e →
+                   record
+                   { c =
+                       record
+                       { R =
+                           record
+                           { Fib =
+                               λ x₁ →
+                                 .Setoid.Fibra-SP.FibSP.Fib (Iso.R e)
+                                 (proj₁ (ContrS.c (Iso.R- φ (proj₁ x₁))) , proj₂ x₁)
+                           ; Sub =
+                               λ x₁ x' x* →
+                                 .Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                 (proj₁ (ContrS.c (Iso.R- φ (proj₁ x₁))) , proj₂ x₁)
+                                 (proj₁ (ContrS.c (Iso.R- φ (proj₁ x'))) , proj₂ x')
+                                 (ContrS.p (Iso.R- φ (proj₁ x'))
+                                  (proj₁ (ContrS.c (Iso.R- φ (proj₁ x₁))) ,
+                                   proj₁
+                                   (.Setoid.Fibra-SP.FibSP.Sub (Iso.R φ)
+                                    (proj₁ (ContrS.c (Iso.R- φ (proj₁ x₁))) , proj₁ x₁)
+                                    (proj₁ (ContrS.c (Iso.R- φ (proj₁ x₁))) , proj₁ x')
+                                    (r .x₁ (proj₁ (ContrS.c (Iso.R- φ (proj₁ x₁)))) , proj₁ x*))
+                                   (proj₂ (ContrS.c (Iso.R- φ (proj₁ x₁)))))
+                                  , proj₁ (E* x (r x (proj₂ x₁)) (proj₂ x*)) (r x (proj₂ x₁)))
+                           }
+                       ; R+ =
+                           λ a' →
+                             record
+                             { c =
+                                 proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))) ,
+                                 proj₁
+                                 (.Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                  (proj₁ (ContrS.c (Iso.R- φ a')) ,
+                                   proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))))
+                                  (proj₁ (ContrS.c (Iso.R- φ a')) ,
+                                   proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))))
+                                  (r .x₁ (proj₁ (ContrS.c (Iso.R- φ a'))) ,
+                                   r x
+                                   (proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))))))
+                                 (proj₂ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))))
+                             ; p =
+                                 λ b'p →
+                                   proj₂
+                                   (E* x
+                                    (proj₁ (E* x (r x (proj₁ b'p)) (r x (proj₁ b'p)))
+                                     (r x (proj₁ b'p)))
+                                    (r x
+                                     (proj₁
+                                      (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))))))
+                                   (proj₁
+                                    (E* x
+                                     (proj₁
+                                      (E* x
+                                       (ContrS.p (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))
+                                        (proj₁ b'p , proj₂ b'p))
+                                       (r x (proj₁ b'p)))
+                                      (r x (proj₁ b'p)))
+                                     (r x
+                                      (proj₁
+                                       (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))))))
+                                    (r x
+                                     (proj₁
+                                      (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))))))
+                             }
+                       ; R- =
+                           λ b' →
+                             record
+                             { c =
+                                 proj₁ (ContrS.c (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- e b'))))) ,
+                                 proj₁
+                                 (.Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                  (proj₁ (ContrS.c (Iso.R- e b')) , b')
+                                  (proj₁
+                                   (ContrS.c
+                                    (Iso.R- φ
+                                     (proj₁
+                                      (ContrS.c (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- e b'))))))))
+                                   , b')
+                                  (ContrS.p
+                                   (Iso.R- φ
+                                    (proj₁ (ContrS.c (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- e b')))))))
+                                   (proj₁ (ContrS.c (Iso.R- e b')) ,
+                                    proj₂ (ContrS.c (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- e b'))))))
+                                   , r x b'))
+                                 (proj₂ (ContrS.c (Iso.R- e b')))
+                             ; p =
+                                 λ a'p →
+                                   proj₂
+                                   (E* .y₁
+                                    (ContrS.p (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p)))))
+                                     (proj₁ a'p , proj₂ (ContrS.c (Iso.R- φ (proj₁ a'p)))))
+                                    (r .y₁
+                                     (proj₁
+                                      (ContrS.c (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- e b'))))))))
+                                   (ContrS.p (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- e b'))))
+                                    (proj₁
+                                     (ContrS.c (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p))))))
+                                     ,
+                                     proj₁
+                                     (.Setoid.Fibra-SP.FibSP.Sub (Iso.R φ)
+                                      (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p))) ,
+                                       proj₁
+                                       (ContrS.c
+                                        (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p)))))))
+                                      (proj₁ (ContrS.c (Iso.R- e b')) ,
+                                       proj₁
+                                       (ContrS.c
+                                        (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p)))))))
+                                      (ContrS.p (Iso.R- e b')
+                                       (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p))) , proj₂ a'p)
+                                       ,
+                                       r .y₁
+                                       (proj₁
+                                        (ContrS.c
+                                         (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p)))))))))
+                                     (proj₂
+                                      (ContrS.c
+                                       (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p)))))))))
+                             }
+                       }
+                       ,
+                       (λ {x₁} {x'} x~x' {y} {y'} y~y' →
+                          .Setoid.Fibra-SP.FibSP.Sub (Iso.R e) (x₁ , y)
+                          (proj₁ (ContrS.c (Iso.R- φ x')) , y')
+                          (ContrS.p (Iso.R- φ x') (x₁ , x~x') , y~y'))
+                   ; p =
+                       λ e'p x' y' →
+                         (λ z →
+                            proj₂ (proj₂ e'p (proj₂ (ContrS.c (Iso.R- φ x'))) (r x y')) z)
+                         ,
+                         (λ z →
+                            proj₁ (proj₂ e'p (proj₂ (ContrS.c (Iso.R- φ x'))) (r x y')) z)
+                   }
+             ; R- =
+                 λ e →
+                   record
+                   { c =
+                       record
+                       { R =
+                           record
+                           { Fib =
+                               λ x₁ →
+                                 .Setoid.Fibra-SP.FibSP.Fib (Iso.R e)
+                                 (proj₁ (ContrS.c (Iso.R+ φ (proj₁ x₁))) , proj₂ x₁)
+                           ; Sub =
+                               λ x₁ x' x* →
+                                 .Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                 (proj₁ (ContrS.c (Iso.R+ φ (proj₁ x₁))) , proj₂ x₁)
+                                 (proj₁ (ContrS.c (Iso.R+ φ (proj₁ x'))) , proj₂ x')
+                                 (ContrS.p (Iso.R+ φ (proj₁ x'))
+                                  (proj₁ (ContrS.c (Iso.R+ φ (proj₁ x₁))) ,
+                                   proj₁
+                                   (.Setoid.Fibra-SP.FibSP.Sub (Iso.R φ)
+                                    (proj₁ x₁ , proj₁ (ContrS.c (Iso.R+ φ (proj₁ x₁))))
+                                    (proj₁ x' , proj₁ (ContrS.c (Iso.R+ φ (proj₁ x₁))))
+                                    (proj₁ x* , r .y₁ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ x₁))))))
+                                   (proj₂ (ContrS.c (Iso.R+ φ (proj₁ x₁)))))
+                                  ,
+                                  proj₁
+                                  (E* x (proj₁ (E* x (proj₂ x*) (r x (proj₂ x₁))) (r x (proj₂ x₁)))
+                                   (r x (proj₂ x')))
+                                  (r x (proj₂ x')))
+                           }
+                       ; R+ =
+                           λ a' →
+                             record
+                             { c =
+                                 proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))) ,
+                                 proj₁
+                                 (.Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                  (proj₁ (ContrS.c (Iso.R+ φ a')) ,
+                                   proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))))
+                                  (proj₁ (ContrS.c (Iso.R+ φ a')) ,
+                                   proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))))
+                                  (r .y₁ (proj₁ (ContrS.c (Iso.R+ φ a'))) ,
+                                   proj₁
+                                   (E* x
+                                    (r x
+                                     (proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a')))))))
+                                    (r x
+                                     (proj₁
+                                      (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))))))
+                                   (r x
+                                    (proj₁
+                                     (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a')))))))))
+                                 (proj₂ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))))
+                             ; p =
+                                 λ b'p →
+                                   proj₂
+                                   (E* x (r x (proj₁ b'p))
+                                    (r x
+                                     (proj₁
+                                      (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))))))
+                                   (proj₁
+                                    (E* x (r x (proj₁ b'p))
+                                     (ContrS.p (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))
+                                      (proj₁ b'p , proj₂ b'p)))
+                                    (r x (proj₁ b'p)))
+                             }
+                       ; R- =
+                           λ b' →
+                             record
+                             { c =
+                                 proj₁ (ContrS.c (Iso.R- φ (proj₁ (ContrS.c (Iso.R- e b'))))) ,
+                                 proj₁
+                                 (.Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                  (proj₁ (ContrS.c (Iso.R- e b')) , b')
+                                  (proj₁
+                                   (ContrS.c
+                                    (Iso.R+ φ
+                                     (proj₁
+                                      (ContrS.c (Iso.R- φ (proj₁ (ContrS.c (Iso.R- e b'))))))))
+                                   , b')
+                                  (ContrS.p
+                                   (Iso.R+ φ
+                                    (proj₁ (ContrS.c (Iso.R- φ (proj₁ (ContrS.c (Iso.R- e b')))))))
+                                   (proj₁ (ContrS.c (Iso.R- e b')) ,
+                                    proj₂ (ContrS.c (Iso.R- φ (proj₁ (ContrS.c (Iso.R- e b'))))))
+                                   , r x b'))
+                                 (proj₂ (ContrS.c (Iso.R- e b')))
+                             ; p =
+                                 λ a'p →
+                                   proj₂
+                                   (E* .x₁
+                                    (ContrS.p (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p)))))
+                                     (proj₁ a'p , proj₂ (ContrS.c (Iso.R+ φ (proj₁ a'p)))))
+                                    (r .x₁
+                                     (proj₁
+                                      (ContrS.c (Iso.R- φ (proj₁ (ContrS.c (Iso.R- e b'))))))))
+                                   (ContrS.p (Iso.R- φ (proj₁ (ContrS.c (Iso.R- e b'))))
+                                    (proj₁
+                                     (ContrS.c (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p))))))
+                                     ,
+                                     proj₁
+                                     (.Setoid.Fibra-SP.FibSP.Sub (Iso.R φ)
+                                      (proj₁
+                                       (ContrS.c
+                                        (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p))))))
+                                       , proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p))))
+                                      (proj₁
+                                       (ContrS.c
+                                        (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p))))))
+                                       , proj₁ (ContrS.c (Iso.R- e b')))
+                                      (r .x₁
+                                       (proj₁
+                                        (ContrS.c
+                                         (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p)))))))
+                                       ,
+                                       ContrS.p (Iso.R- e b')
+                                       (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p))) , proj₂ a'p)))
+                                     (proj₂
+                                      (ContrS.c
+                                       (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p)))))))))
+                             }
+                       }
+                       ,
+                       (λ {x₁} {x'} x~x' {y} {y'} y~y' →
+                          .Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                          (proj₁ (ContrS.c (Iso.R+ φ x₁)) , y) (x' , y')
+                          (proj₁ (E* .y₁ (ContrS.p (Iso.R+ φ x₁) (x' , x~x')) (r .y₁ x'))
+                           (r .y₁ x')
+                           ,
+                           proj₁ (E* x (proj₁ (E* x y~y' (r x y)) (r x y)) (r x y'))
+                           (r x y')))
+                   ; p =
+                       λ e'p x' y' → proj₂ e'p (proj₂ (ContrS.c (Iso.R+ φ x'))) (r x y')
+                   }
+             }))
+         (λ {.x₂} {.y₂} ψ →
+            Xjust
+            (record
+             { R =
+                 record
+                 { Fib =
+                     λ ee' →
+                       {x : El .x₁} {x' : El .y₁} →
+                       .Setoid.Fibra-SP.FibSP.Fib (Iso.R φ) (x , x') →
+                       {y : El .x₂} {y' : El .y₂} →
+                       .Setoid.Fibra-SP.FibSP.Fib (Iso.R ψ) (y , y') →
+                       Σ
+                       (.Setoid.Fibra-SP.FibSP.Fib (Iso.R (proj₁ ee')) (x , y) →
+                        .Setoid.Fibra-SP.FibSP.Fib (Iso.R (proj₂ ee')) (x' , y'))
+                       (λ x₁ →
+                          .Setoid.Fibra-SP.FibSP.Fib (Iso.R (proj₂ ee')) (x' , y') →
+                          .Setoid.Fibra-SP.FibSP.Fib (Iso.R (proj₁ ee')) (x , y))
+                 ; Sub =
+                     λ ii' jj' i=ji'=j' →
+                       (λ p {.x₃} {.x₄} q {.x₅} {.x₆} q₁ →
+                          (λ z →
+                             proj₁ (proj₂ i=ji'=j' .x₄ .x₆)
+                             (proj₁ (p q q₁) (proj₂ (proj₁ i=ji'=j' .x₃ .x₅) z)))
+                          ,
+                          (λ z →
+                             proj₁ (proj₁ i=ji'=j' .x₃ .x₅)
+                             (proj₂ (p q q₁) (proj₂ (proj₂ i=ji'=j' .x₄ .x₆) z))))
+                       ,
+                       (λ q {.x₃} {.x₄} p {.x₅} {.x₆} p₁ →
+                          (λ z →
+                             proj₂ (proj₂ i=ji'=j' .x₄ .x₆)
+                             (proj₁ (q p p₁) (proj₁ (proj₁ i=ji'=j' .x₃ .x₅) z)))
+                          ,
+                          (λ z →
+                             proj₂ (proj₁ i=ji'=j' .x₃ .x₅)
+                             (proj₂ (q p p₁) (proj₁ (proj₂ i=ji'=j' .x₄ .x₆) z))))
+                 }
+             ; R+ =
+                 λ e →
+                   record
+                   { c =
+                       record
+                       { R =
+                           record
+                           { Fib =
+                               λ x →
+                                 .Setoid.Fibra-SP.FibSP.Fib (Iso.R e)
+                                 (proj₁ (ContrS.c (Iso.R- φ (proj₁ x))) ,
+                                  proj₁ (ContrS.c (Iso.R- ψ (proj₂ x))))
+                           ; Sub =
+                               λ x x' x* →
+                                 .Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                 (proj₁ (ContrS.c (Iso.R- φ (proj₁ x))) ,
+                                  proj₁ (ContrS.c (Iso.R- ψ (proj₂ x))))
+                                 (proj₁ (ContrS.c (Iso.R- φ (proj₁ x'))) ,
+                                  proj₁ (ContrS.c (Iso.R- ψ (proj₂ x'))))
+                                 (ContrS.p (Iso.R- φ (proj₁ x'))
+                                  (proj₁ (ContrS.c (Iso.R- φ (proj₁ x))) ,
+                                   proj₁
+                                   (.Setoid.Fibra-SP.FibSP.Sub (Iso.R φ)
+                                    (proj₁ (ContrS.c (Iso.R- φ (proj₁ x))) , proj₁ x)
+                                    (proj₁ (ContrS.c (Iso.R- φ (proj₁ x))) , proj₁ x')
+                                    (r .x₁ (proj₁ (ContrS.c (Iso.R- φ (proj₁ x)))) , proj₁ x*))
+                                   (proj₂ (ContrS.c (Iso.R- φ (proj₁ x)))))
+                                  ,
+                                  ContrS.p (Iso.R- ψ (proj₂ x'))
+                                  (proj₁ (ContrS.c (Iso.R- ψ (proj₂ x))) ,
+                                   proj₁
+                                   (.Setoid.Fibra-SP.FibSP.Sub (Iso.R ψ)
+                                    (proj₁ (ContrS.c (Iso.R- ψ (proj₂ x))) , proj₂ x)
+                                    (proj₁ (ContrS.c (Iso.R- ψ (proj₂ x))) , proj₂ x')
+                                    (r .x₂ (proj₁ (ContrS.c (Iso.R- ψ (proj₂ x)))) , proj₂ x*))
+                                   (proj₂ (ContrS.c (Iso.R- ψ (proj₂ x))))))
+                           }
+                       ; R+ =
+                           λ a' →
+                             record
+                             { c =
+                                 proj₁
+                                 (ContrS.c
+                                  (Iso.R+ ψ
+                                   (proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))))))
+                                 ,
+                                 proj₁
+                                 (.Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                  (proj₁ (ContrS.c (Iso.R- φ a')) ,
+                                   proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))))
+                                  (proj₁ (ContrS.c (Iso.R- φ a')) ,
+                                   proj₁
+                                   (ContrS.c
+                                    (Iso.R- ψ
+                                     (proj₁
+                                      (ContrS.c
+                                       (Iso.R+ ψ
+                                        (proj₁
+                                         (ContrS.c
+                                          (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))))))))))
+                                  (r .x₁ (proj₁ (ContrS.c (Iso.R- φ a'))) ,
+                                   ContrS.p
+                                   (Iso.R- ψ
+                                    (proj₁
+                                     (ContrS.c
+                                      (Iso.R+ ψ
+                                       (proj₁
+                                        (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))))))))
+                                   (proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))) ,
+                                    proj₂
+                                    (ContrS.c
+                                     (Iso.R+ ψ
+                                      (proj₁
+                                       (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a')))))))))))
+                                 (proj₂ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))))
+                             ; p =
+                                 λ b'p →
+                                   proj₂
+                                   (E* .y₂
+                                    (ContrS.p (Iso.R+ ψ (proj₁ (ContrS.c (Iso.R- ψ (proj₁ b'p)))))
+                                     (proj₁ b'p , proj₂ (ContrS.c (Iso.R- ψ (proj₁ b'p)))))
+                                    (r .y₂
+                                     (proj₁
+                                      (ContrS.c
+                                       (Iso.R+ ψ
+                                        (proj₁
+                                         (ContrS.c
+                                          (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a')))))))))))
+                                   (ContrS.p
+                                    (Iso.R+ ψ
+                                     (proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a')))))))
+                                    (proj₁
+                                     (ContrS.c (Iso.R+ ψ (proj₁ (ContrS.c (Iso.R- ψ (proj₁ b'p))))))
+                                     ,
+                                     proj₁
+                                     (.Setoid.Fibra-SP.FibSP.Sub (Iso.R ψ)
+                                      (proj₁ (ContrS.c (Iso.R- ψ (proj₁ b'p))) ,
+                                       proj₁
+                                       (ContrS.c
+                                        (Iso.R+ ψ (proj₁ (ContrS.c (Iso.R- ψ (proj₁ b'p)))))))
+                                      (proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a')))))
+                                       ,
+                                       proj₁
+                                       (ContrS.c
+                                        (Iso.R+ ψ (proj₁ (ContrS.c (Iso.R- ψ (proj₁ b'p)))))))
+                                      (ContrS.p (Iso.R+ e (proj₁ (ContrS.c (Iso.R- φ a'))))
+                                       (proj₁ (ContrS.c (Iso.R- ψ (proj₁ b'p))) , proj₂ b'p)
+                                       ,
+                                       r .y₂
+                                       (proj₁
+                                        (ContrS.c
+                                         (Iso.R+ ψ (proj₁ (ContrS.c (Iso.R- ψ (proj₁ b'p)))))))))
+                                     (proj₂
+                                      (ContrS.c
+                                       (Iso.R+ ψ (proj₁ (ContrS.c (Iso.R- ψ (proj₁ b'p)))))))))
+                             }
+                       ; R- =
+                           λ b' →
+                             record
+                             { c =
+                                 proj₁
+                                 (ContrS.c
+                                  (Iso.R+ φ
+                                   (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- ψ b'))))))))
+                                 ,
+                                 proj₁
+                                 (.Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                  (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- ψ b'))))) ,
+                                   proj₁ (ContrS.c (Iso.R- ψ b')))
+                                  (proj₁
+                                   (ContrS.c
+                                    (Iso.R- φ
+                                     (proj₁
+                                      (ContrS.c
+                                       (Iso.R+ φ
+                                        (proj₁
+                                         (ContrS.c
+                                          (Iso.R- e (proj₁ (ContrS.c (Iso.R- ψ b')))))))))))
+                                   , proj₁ (ContrS.c (Iso.R- ψ b')))
+                                  (ContrS.p
+                                   (Iso.R- φ
+                                    (proj₁
+                                     (ContrS.c
+                                      (Iso.R+ φ
+                                       (proj₁
+                                        (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- ψ b'))))))))))
+                                   (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- ψ b'))))) ,
+                                    proj₂
+                                    (ContrS.c
+                                     (Iso.R+ φ
+                                      (proj₁
+                                       (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- ψ b')))))))))
+                                   , r .x₂ (proj₁ (ContrS.c (Iso.R- ψ b')))))
+                                 (proj₂ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- ψ b'))))))
+                             ; p =
+                                 λ a'p →
+                                   proj₂
+                                   (E* .y₁
+                                    (ContrS.p (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p)))))
+                                     (proj₁ a'p , proj₂ (ContrS.c (Iso.R- φ (proj₁ a'p)))))
+                                    (r .y₁
+                                     (proj₁
+                                      (ContrS.c
+                                       (Iso.R+ φ
+                                        (proj₁
+                                         (ContrS.c
+                                          (Iso.R- e (proj₁ (ContrS.c (Iso.R- ψ b')))))))))))
+                                   (ContrS.p
+                                    (Iso.R+ φ
+                                     (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- ψ b')))))))
+                                    (proj₁
+                                     (ContrS.c (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p))))))
+                                     ,
+                                     proj₁
+                                     (.Setoid.Fibra-SP.FibSP.Sub (Iso.R φ)
+                                      (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p))) ,
+                                       proj₁
+                                       (ContrS.c
+                                        (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p)))))))
+                                      (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R- ψ b')))))
+                                       ,
+                                       proj₁
+                                       (ContrS.c
+                                        (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p)))))))
+                                      (ContrS.p (Iso.R- e (proj₁ (ContrS.c (Iso.R- ψ b'))))
+                                       (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p))) , proj₂ a'p)
+                                       ,
+                                       r .y₁
+                                       (proj₁
+                                        (ContrS.c
+                                         (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p)))))))))
+                                     (proj₂
+                                      (ContrS.c
+                                       (Iso.R+ φ (proj₁ (ContrS.c (Iso.R- φ (proj₁ a'p)))))))))
+                             }
+                       }
+                       ,
+                       (λ {x} {x'} x~x' {y} {y'} y~y' →
+                          .Setoid.Fibra-SP.FibSP.Sub (Iso.R e) (x , y)
+                          (proj₁ (ContrS.c (Iso.R- φ x')) , proj₁ (ContrS.c (Iso.R- ψ y')))
+                          (ContrS.p (Iso.R- φ x') (x , x~x') ,
+                           ContrS.p (Iso.R- ψ y') (y , y~y')))
+                   ; p =
+                       λ e'p x' y' →
+                         (λ z →
+                            proj₂
+                            (proj₂ e'p (proj₂ (ContrS.c (Iso.R- φ x')))
+                             (proj₂ (ContrS.c (Iso.R- ψ y'))))
+                            z)
+                         ,
+                         (λ z →
+                            proj₁
+                            (proj₂ e'p (proj₂ (ContrS.c (Iso.R- φ x')))
+                             (proj₂ (ContrS.c (Iso.R- ψ y'))))
+                            z)
+                   }
+             ; R- =
+                 λ e →
+                   record
+                   { c =
+                       record
+                       { R =
+                           record
+                           { Fib =
+                               λ x →
+                                 .Setoid.Fibra-SP.FibSP.Fib (Iso.R e)
+                                 (proj₁ (ContrS.c (Iso.R+ φ (proj₁ x))) ,
+                                  proj₁ (ContrS.c (Iso.R+ ψ (proj₂ x))))
+                           ; Sub =
+                               λ x x' x* →
+                                 .Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                 (proj₁ (ContrS.c (Iso.R+ φ (proj₁ x))) ,
+                                  proj₁ (ContrS.c (Iso.R+ ψ (proj₂ x))))
+                                 (proj₁ (ContrS.c (Iso.R+ φ (proj₁ x'))) ,
+                                  proj₁ (ContrS.c (Iso.R+ ψ (proj₂ x'))))
+                                 (ContrS.p (Iso.R+ φ (proj₁ x'))
+                                  (proj₁ (ContrS.c (Iso.R+ φ (proj₁ x))) ,
+                                   proj₁
+                                   (.Setoid.Fibra-SP.FibSP.Sub (Iso.R φ)
+                                    (proj₁ x , proj₁ (ContrS.c (Iso.R+ φ (proj₁ x))))
+                                    (proj₁ x' , proj₁ (ContrS.c (Iso.R+ φ (proj₁ x))))
+                                    (proj₁ x* , r .y₁ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ x))))))
+                                   (proj₂ (ContrS.c (Iso.R+ φ (proj₁ x)))))
+                                  ,
+                                  ContrS.p (Iso.R+ ψ (proj₂ x'))
+                                  (proj₁ (ContrS.c (Iso.R+ ψ (proj₂ x))) ,
+                                   proj₁
+                                   (.Setoid.Fibra-SP.FibSP.Sub (Iso.R ψ)
+                                    (proj₂ x , proj₁ (ContrS.c (Iso.R+ ψ (proj₂ x))))
+                                    (proj₂ x' , proj₁ (ContrS.c (Iso.R+ ψ (proj₂ x))))
+                                    (proj₂ x* , r .y₂ (proj₁ (ContrS.c (Iso.R+ ψ (proj₂ x))))))
+                                   (proj₂ (ContrS.c (Iso.R+ ψ (proj₂ x))))))
+                           }
+                       ; R+ =
+                           λ a' →
+                             record
+                             { c =
+                                 proj₁
+                                 (ContrS.c
+                                  (Iso.R- ψ
+                                   (proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))))))
+                                 ,
+                                 proj₁
+                                 (.Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                  (proj₁ (ContrS.c (Iso.R+ φ a')) ,
+                                   proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))))
+                                  (proj₁ (ContrS.c (Iso.R+ φ a')) ,
+                                   proj₁
+                                   (ContrS.c
+                                    (Iso.R+ ψ
+                                     (proj₁
+                                      (ContrS.c
+                                       (Iso.R- ψ
+                                        (proj₁
+                                         (ContrS.c
+                                          (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))))))))))
+                                  (r .y₁ (proj₁ (ContrS.c (Iso.R+ φ a'))) ,
+                                   ContrS.p
+                                   (Iso.R+ ψ
+                                    (proj₁
+                                     (ContrS.c
+                                      (Iso.R- ψ
+                                       (proj₁
+                                        (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))))))))
+                                   (proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))) ,
+                                    proj₂
+                                    (ContrS.c
+                                     (Iso.R- ψ
+                                      (proj₁
+                                       (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a')))))))))))
+                                 (proj₂ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))))
+                             ; p =
+                                 λ b'p →
+                                   proj₂
+                                   (E* .x₂
+                                    (ContrS.p (Iso.R- ψ (proj₁ (ContrS.c (Iso.R+ ψ (proj₁ b'p)))))
+                                     (proj₁ b'p , proj₂ (ContrS.c (Iso.R+ ψ (proj₁ b'p)))))
+                                    (r .x₂
+                                     (proj₁
+                                      (ContrS.c
+                                       (Iso.R- ψ
+                                        (proj₁
+                                         (ContrS.c
+                                          (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a')))))))))))
+                                   (ContrS.p
+                                    (Iso.R- ψ
+                                     (proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a')))))))
+                                    (proj₁
+                                     (ContrS.c (Iso.R- ψ (proj₁ (ContrS.c (Iso.R+ ψ (proj₁ b'p))))))
+                                     ,
+                                     proj₁
+                                     (.Setoid.Fibra-SP.FibSP.Sub (Iso.R ψ)
+                                      (proj₁
+                                       (ContrS.c
+                                        (Iso.R- ψ (proj₁ (ContrS.c (Iso.R+ ψ (proj₁ b'p))))))
+                                       , proj₁ (ContrS.c (Iso.R+ ψ (proj₁ b'p))))
+                                      (proj₁
+                                       (ContrS.c
+                                        (Iso.R- ψ (proj₁ (ContrS.c (Iso.R+ ψ (proj₁ b'p))))))
+                                       ,
+                                       proj₁ (ContrS.c (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))))
+                                      (r .x₂
+                                       (proj₁
+                                        (ContrS.c
+                                         (Iso.R- ψ (proj₁ (ContrS.c (Iso.R+ ψ (proj₁ b'p)))))))
+                                       ,
+                                       ContrS.p (Iso.R+ e (proj₁ (ContrS.c (Iso.R+ φ a'))))
+                                       (proj₁ (ContrS.c (Iso.R+ ψ (proj₁ b'p))) , proj₂ b'p)))
+                                     (proj₂
+                                      (ContrS.c
+                                       (Iso.R- ψ (proj₁ (ContrS.c (Iso.R+ ψ (proj₁ b'p)))))))))
+                             }
+                       ; R- =
+                           λ b' →
+                             record
+                             { c =
+                                 proj₁
+                                 (ContrS.c
+                                  (Iso.R- φ
+                                   (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ ψ b'))))))))
+                                 ,
+                                 proj₁
+                                 (.Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                                  (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ ψ b'))))) ,
+                                   proj₁ (ContrS.c (Iso.R+ ψ b')))
+                                  (proj₁
+                                   (ContrS.c
+                                    (Iso.R+ φ
+                                     (proj₁
+                                      (ContrS.c
+                                       (Iso.R- φ
+                                        (proj₁
+                                         (ContrS.c
+                                          (Iso.R- e (proj₁ (ContrS.c (Iso.R+ ψ b')))))))))))
+                                   , proj₁ (ContrS.c (Iso.R+ ψ b')))
+                                  (ContrS.p
+                                   (Iso.R+ φ
+                                    (proj₁
+                                     (ContrS.c
+                                      (Iso.R- φ
+                                       (proj₁
+                                        (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ ψ b'))))))))))
+                                   (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ ψ b'))))) ,
+                                    proj₂
+                                    (ContrS.c
+                                     (Iso.R- φ
+                                      (proj₁
+                                       (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ ψ b')))))))))
+                                   , r .y₂ (proj₁ (ContrS.c (Iso.R+ ψ b')))))
+                                 (proj₂ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ ψ b'))))))
+                             ; p =
+                                 λ a'p →
+                                   proj₂
+                                   (E* .x₁
+                                    (ContrS.p (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p)))))
+                                     (proj₁ a'p , proj₂ (ContrS.c (Iso.R+ φ (proj₁ a'p)))))
+                                    (r .x₁
+                                     (proj₁
+                                      (ContrS.c
+                                       (Iso.R- φ
+                                        (proj₁
+                                         (ContrS.c
+                                          (Iso.R- e (proj₁ (ContrS.c (Iso.R+ ψ b')))))))))))
+                                   (ContrS.p
+                                    (Iso.R- φ
+                                     (proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ ψ b')))))))
+                                    (proj₁
+                                     (ContrS.c (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p))))))
+                                     ,
+                                     proj₁
+                                     (.Setoid.Fibra-SP.FibSP.Sub (Iso.R φ)
+                                      (proj₁
+                                       (ContrS.c
+                                        (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p))))))
+                                       , proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p))))
+                                      (proj₁
+                                       (ContrS.c
+                                        (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p))))))
+                                       ,
+                                       proj₁ (ContrS.c (Iso.R- e (proj₁ (ContrS.c (Iso.R+ ψ b'))))))
+                                      (r .x₁
+                                       (proj₁
+                                        (ContrS.c
+                                         (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p)))))))
+                                       ,
+                                       ContrS.p (Iso.R- e (proj₁ (ContrS.c (Iso.R+ ψ b'))))
+                                       (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p))) , proj₂ a'p)))
+                                     (proj₂
+                                      (ContrS.c
+                                       (Iso.R- φ (proj₁ (ContrS.c (Iso.R+ φ (proj₁ a'p)))))))))
+                             }
+                       }
+                       ,
+                       (λ {x} {x'} x~x' {y} {y'} y~y' →
+                          .Setoid.Fibra-SP.FibSP.Sub (Iso.R e)
+                          (proj₁ (ContrS.c (Iso.R+ φ x)) , proj₁ (ContrS.c (Iso.R+ ψ y)))
+                          (x' , y')
+                          (proj₁ (E* .y₁ (ContrS.p (Iso.R+ φ x) (x' , x~x')) (r .y₁ x'))
+                           (r .y₁ x')
+                           ,
+                           proj₁ (E* .y₂ (ContrS.p (Iso.R+ ψ y) (y' , y~y')) (r .y₂ y'))
+                           (r .y₂ y')))
+                   ; p =
+                       λ e'p x' y' →
+                         proj₂ e'p (proj₂ (ContrS.c (Iso.R+ φ x')))
+                         (proj₂ (ContrS.c (Iso.R+ ψ y')))
+                   }
+             })))
+}
+

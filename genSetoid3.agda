@@ -6,54 +6,28 @@ open import Setoid
 open import prop
 open import Data.Empty
 open import Data.Unit
-open import Data.Product
+open import Data.Product hiding (map)
 open import Data.Nat
 open import Data.Fin
 open import Setoid.Fibra-SS
 open import Setoid.Isomorphism
-
-data Shape : Set where
-  empty : Shape
-  single : Shape
 
 record Graph : Set₁ where
   field
     Vertex : Set
     Edge   : Vertex → Vertex → Set
 
-  data VertexList : Shape → Vertex → Vertex → Set where
-    empty : ∀ a → VertexList empty a a
-    single : ∀ a b → VertexList single a b
+  MaybeEdge : Vertex → Vertex → Set
+  MaybeEdge a b = ∀ (X : Vertex → Vertex → Set) →
+    (∀ x → X x x) →
+    (∀ {x} {y} → Edge x y → X x y) →
+    X a b
 
-  data EdgePos : ∀ {s a b} → VertexList s a b → Vertex → Vertex → Set where
-    edge : ∀ {a b} → EdgePos (single a b) a b
+  empty : ∀ a → MaybeEdge a a
+  empty a = λ X Xemp _ → Xemp a
 
-  EdgeList : ∀ {s a b} → VertexList s a b → Set
-  EdgeList l = ∀ {a'} {b'} → EdgePos l a' b' → Edge a' b'
-
---  tail : ∀ {a} {b} {c} {l : VertexList b c} → EdgeList (cons a l) → EdgeList l
---  tail l e = l (next e)
-
---  appendE : ∀ {a b c} {l : VertexList a b} {m : VertexList b c} → EdgeList l → EdgeList m → EdgeList (append l m)
---  appendE {l = empty _} _ Em e = Em e
---  appendE {l = cons _ _} El _ first = El first
---  appendE {l = cons _ _} El Em (next e) = appendE (tail El) Em e
-
-  record Path (shape : Shape) (a b : Vertex) : Set where
-    field
-      vertexList : VertexList shape a b
-      edgeList   : EdgeList vertexList
-
-  emptyP : ∀ a → Path empty a a
-  emptyP a = record {
-    vertexList = empty a;
-    edgeList = λ () }
-
-  singleE : ∀ {a} {b} → Edge a b → EdgeList (single a b)
-  singleE e edge = e
-
-  singleP : ∀ {a} {b} → Edge a b → Path single a b
-  singleP {a} {b} e = record { vertexList = single a b ; edgeList = singleE e }
+  just : ∀ {a b} → Edge a b → MaybeEdge a b
+  just e = λ X _ Xjust → Xjust e
 
   record Fibra-GP : Set where
     field
@@ -69,91 +43,117 @@ record Graph : Set₁ where
 
 open Graph public
 
-mapV : ∀ {s} {G H : Graph} (f : Vertex G → Vertex H) {a} {b} → VertexList G s a b → VertexList H s (f a) (f b)
-mapV f (empty a) = empty (f a)
-mapV f (single a b) = single (f a) (f b)
-
 UnitG : Graph
 UnitG = record { Vertex = ⊤ ; Edge = λ _ _ → ⊥ }
 
 SETOID : Graph
 SETOID = record { Vertex = Setoid ; Edge = Iso }
 
-SetoidList = VertexList SETOID
+MaybeIso = MaybeEdge SETOID
 
-pre-flatten : ∀ {s S T} {RR : SetoidList s S T} → (∀ {S' T'} → EdgePos SETOID RR S' T' → Iso S' T') → Iso S T
-pre-flatten {RR = empty S} ee = id-iso S
-pre-flatten {RR = single S T} ee = ee edge
+flatten : ∀ {A} {B} → MaybeIso A B → Iso A B
+flatten p = p Iso id-iso (λ φ → φ)
 
-IsoList = Path SETOID
-
-flatten : ∀ {s} {S} {T} → IsoList s S T → Iso S T
-flatten l = pre-flatten (Path.edgeList l)
-
-mapIso* : ∀ {s A B C D} → IsoList s A B → IsoList s C D → IsoList s (ISO A C) (ISO B D)
-mapIso* {empty} record { vertexList = (empty a₁) ; edgeList = edgeList } record { vertexList = (empty a) ; edgeList = edgeList₁ } = emptyP SETOID (ISO a₁ a)
-mapIso* {single} record { vertexList = (single a₁ b) ; edgeList = edgeList } record { vertexList = (single a D) ; edgeList = edgeList₁ } = singleP SETOID (Iso* (edgeList edge) (edgeList₁ edge))
-
-flatten-mapIso* : ∀ {s A B C D} (l : IsoList s A B) (m : IsoList s C D) →
-  E (ISO (ISO A C) (ISO B D)) (flatten (mapIso* l m)) (Iso* (flatten l) (flatten m))
-flatten-mapIso* {empty} record { vertexList = (empty a₁) ; edgeList = edgeList } record { vertexList = (empty a) ; edgeList = edgeList₁ } x y = sym-p (iso-eq {a₁} {a} {x} {y})
-flatten-mapIso* {single} record { vertexList = (single a₁ b) ; edgeList = edgeList } record { vertexList = (single a D) ; edgeList = edgeList₁ } x y = refl-p
-
-record Fibra-GS (G : Graph) : Set where
+record mGraph (G H : Graph) : Set where
   field
-    FibGS : Vertex G → Setoid
-    shape : ∀ {x y} → Edge G x y → Shape
-    SubGS : ∀ {x y} (e : Edge G x y) → IsoList (shape e) (FibGS x) (FibGS y)
+    appV : Vertex G → Vertex H
+    appE : ∀ {g} {g'} → Edge G g g' → MaybeEdge H (appV g) (appV g')
 
-  SHAPE : ∀ {s x y} → Path G s x y → Shape
-  SHAPE {empty} p = empty
-  SHAPE {single} record { vertexList = (single x b) ; edgeList = edgeList } = shape (edgeList edge)
+  map : ∀ {g g'} → MaybeEdge G g g' → MaybeEdge H (appV g) (appV g')
+  map p X Xemp Xjust = p (λ x y → X (appV x) (appV y)) (λ x → Xemp (appV x)) (λ e → appE e X Xemp Xjust)
 
-  SUBGS : ∀ {s x y} (p : Path G s x y) → IsoList (SHAPE p) (FibGS x) (FibGS y)
-  SUBGS {empty} record { vertexList = (empty a) ; edgeList = edgeList } = emptyP SETOID (FibGS a)
-  SUBGS {single} record { vertexList = (single x b) ; edgeList = edgeList } = SubGS (edgeList edge)
+Fibra-GS : Graph → Set
+Fibra-GS G = mGraph G SETOID
+
+-- Constant morphism
+
+K : ∀ G {H} → Vertex H → mGraph G H
+K G {H} h = record { appV = λ _ → h ; appE = λ _ → empty H h }
+
+-- Product of two graphs
+
+module Product (G H : Graph) where
+  data EdgeProd : Vertex G × Vertex H → Vertex G × Vertex H → Set where
+    horiz : ∀ {g} {g'} → Edge G g g' → ∀ h → EdgeProd (g , h) (g' , h)
+    vert  : ∀ g {h} {h'} → Edge H h h' → EdgeProd (g , h) (g , h')
+
+  ProdG : Graph
+  ProdG = record { Vertex = Vertex G × Vertex H ; Edge = EdgeProd }
+open Product public
+
+record build-mPGraph (G H K : Graph) : Set where
+  field
+    appV : Vertex G → Vertex H → Vertex K
+    appE1 : ∀ {g g'} → Edge G g g' → ∀ h → MaybeEdge K (appV g h) (appV g' h)
+    appE2 : ∀ g {h h'} → Edge H h h' → MaybeEdge K (appV g h) (appV g h')
+  
+  appV-out : Vertex G × Vertex H → Vertex K
+  appV-out (g , h) = appV g h
+
+  appE-out : ∀ {x} {y} → Edge (ProdG G H) x y → MaybeEdge K (appV-out x) (appV-out y)
+  appE-out (horiz x h) = appE1 x h
+  appE-out (vert g x) = appE2 g x
+
+  out : mGraph (ProdG G H) K
+  out = record { appV = appV-out ; appE = appE-out }
+
+module Fibra-GS {G} (A : Fibra-GS G) where
+  
+  FibGS = mGraph.appV A
+  SubGS = mGraph.appE A
+  SUBGS = mGraph.map A
 
   record Section : Set where
     field
       app : ∀ x → El (FibGS x)
       wd  : ∀ x x' x* → app x ~< flatten (SubGS x*) > app x'
 
-    WD : ∀ {s} x x' x* → app x ~< flatten (SUBGS {s} x*) > app x'
-    WD {empty} a .a record { vertexList = (empty .a) ; edgeList = edgeList } = r (FibGS a) (app a)
-    WD {single} a b record { vertexList = (single .a .b) ; edgeList = edgeList } = wd a b (edgeList edge)
+    postulate WD : ∀ x x' x* → app x ~< flatten (SUBGS x*) > app x'
+--    WD x x' x* with MaybeEdgeiMaybeEdge G x*
+--    WD a .a x* | empty .a = {!r (FibGS _) (app a)!}
+--    WD x x' x* | plus x₁ p = {!!}
+--    WD x x' x* | minus x₁ p = {!!}
 
   data EdgeSig : Σ[ g ∈ Vertex G ] El (FibGS g) → Σ[ g ∈ Vertex G ] El (FibGS g) → Set where
     horiz : ∀ {g g' a} (e : Edge G g g') → EdgeSig (g , a) (g' , transport (flatten (SubGS e)) a)
     vert  : ∀ {g a a'} → E (FibGS g) a a' → EdgeSig (g , a) (g , a')
-
-  horiz? : ∀ {x} {y} → EdgeSig x y → Shape
-  horiz? (horiz _) = single
-  horiz? (vert _) = empty
-
-  π₁ : ∀ x y (e : EdgeSig x y) → Path G (horiz? e) (proj₁ x) (proj₁ y)
-  π₁ _ _ (horiz e) = singleP G e
-  π₁ _ _ (vert x) = emptyP G _
-
-  π₂ : ∀ x y (e : EdgeSig x y) → proj₂ x ~< flatten (SUBGS (π₁ x y e)) > proj₂ y
-  π₂ _ _ (horiz e) = iso-transport (flatten (SubGS e)) _
-  π₂ _ _ (vert x) = x
 
   Sigma-GS : Graph
   Sigma-GS = record { 
     Vertex = Σ[ g ∈ Vertex G ] El (FibGS g) ; 
     Edge = EdgeSig }
 
+  π₁ : ∀ x y (e : EdgeSig x y) → MaybeEdge G (proj₁ x) (proj₁ y)
+  π₁ _ _ (horiz e) = just G e
+  π₁ _ _ (vert x) = empty G _
+
+  pp : mGraph Sigma-GS G
+  pp = record { appV = proj₁ ; appE = π₁ _ _ }
+
+  π₂ : ∀ x y (e : EdgeSig x y) → proj₂ x ~< flatten (SUBGS (π₁ x y e)) > proj₂ y
+  π₂ _ _ (horiz e) = iso-transport (flatten (SubGS e)) _
+  π₂ _ _ (vert x) = x
+
 open Fibra-GS public
 
-{-append : ∀ {Q R S} → IsoList Q R → IsoList R S → IsoList Q S
+pullback : ∀ {G} {H} → mGraph G H → Fibra-GS H → Fibra-GS G
+pullback f A = record { 
+  appV = λ g → mGraph.appV A (mGraph.appV f g) ; 
+  appE = λ e → mGraph.map A (mGraph.appE f e) }
+
+pullbackS : ∀ {G} {H} (f : mGraph G H) (A : Fibra-GS H) → Section A → Section (pullback f A)
+pullbackS f A s = record { app = λ g → Section.app s (mGraph.appV f g) ; 
+  wd = λ x x' x* → Section.WD s _ _ (mGraph.appE f x*) }
+
+{-append : ∀ {Q R S} → MaybeIso Q R → MaybeIso R S → MaybeIso Q S
 append (empty _) l = l
 append (plus φ l) m = plus φ (append l m)
 
-flatten : ∀ {R S} → IsoList R S → Iso R S
+flatten : ∀ {R S} → MaybeIso R S → Iso R S
 flatten (empty S) = id-iso S
 flatten (plus x p) = comp-iso (flatten p) x
 
-reverse : ∀ {R S} → IsoList R S → IsoList S R
+reverse : ∀ {R S} → MaybeIso R S → MaybeIso S R
 reverse (empty S) = empty S
 reverse (plus x l) = append (reverse l) (plus (inv-iso x) (empty _))
 
@@ -162,11 +162,11 @@ record Graph : Set₁ where
     Vertex : Set
     Edge   : Vertex → Vertex → Set
 
-  data Path : Vertex → Vertex → Set where
-    empty : ∀ x → Path x x
-    single : ∀ {x} {y} → Edge x y → Path x y
-    plus  : ∀ {x y z} → Edge x y → Path y z → Path x z
-    minus : ∀ {x y z} → Edge y x → Path y z → Path x z
+  data MaybeEdge : Vertex → Vertex → Set where
+    empty : ∀ x → MaybeEdge x x
+    single : ∀ {x} {y} → Edge x y → MaybeEdge x y
+    plus  : ∀ {x y z} → Edge x y → MaybeEdge y z → MaybeEdge x z
+    minus : ∀ {x y z} → Edge y x → MaybeEdge y z → MaybeEdge x z
 
   record Fibra-GP : Set where
     field
@@ -178,9 +178,9 @@ record Graph : Set₁ where
   record Fibra-GS : Set where
     field
       FibGS : Vertex → Setoid
-      SubGS : ∀ {x y} → Edge x y → IsoList (FibGS x) (FibGS y)
+      SubGS : ∀ {x y} → Edge x y → MaybeIso (FibGS x) (FibGS y)
 
-    SUBGS : ∀ {x y} → Path x y → IsoList (FibGS x) (FibGS y)
+    SUBGS : ∀ {x y} → MaybeEdge x y → MaybeIso (FibGS x) (FibGS y)
     SUBGS (empty x) = empty (FibGS x)
     SUBGS (single e) = SubGS e
     SUBGS (plus e p) = append (SubGS e) (SUBGS p)
@@ -297,3 +297,4 @@ Sigma-GP G A = record {
     Edg = Σ[ e ∈ Graph.Edg G ] ({!!} ∋ {!!} ~[ {!!} ] {!!}) ; s = {!!} ; t = {!!} } }
 -}
 -}
+

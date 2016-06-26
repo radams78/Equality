@@ -62,6 +62,9 @@ ISO S S' = record {
 _~*<_>_ : ∀ {S S'} {x x' : El S} {i i' : Iso S S'} {y y' : El S'} → E S x x' → E (ISO S S') i i' → E S' y y' → (x ~< i > y) ⇔ (x' ~< i' > y')
 _~*<_>_ {S} {S'} {x} {x'} {i} {i'} {y} {y'} x* i* y* = trans Prop:Set (i* x y) (Sub (Iso.R i') (x , y) (x' , y') (x* , y*))
 
+eqIsoE : ∀ {S S'} {φ ψ : Iso S S'} {x} {y} → x ~< φ > y → E (ISO S S') φ ψ → x ~< ψ > y
+eqIsoE {x = x} {y} x~y φ=ψ = proj₁ (φ=ψ x y) x~y
+
 --Alternative characterisation of eqquality of isomorphims
 iso-eq : ∀ {A} {B} {φ ψ : Iso A B} →
   (∀ {x} {x'} → E A x x' → ∀ {y} {y'} → E B y y' → (x ~< φ > y ⇔ x' ~< ψ > y'))
