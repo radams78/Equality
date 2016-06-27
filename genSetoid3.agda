@@ -74,8 +74,8 @@ K G {H} h = record { appV = λ _ → h ; appE = λ _ → empty H h }
 
 module Product (G H : Graph) where
   data EdgeProd : Vertex G × Vertex H → Vertex G × Vertex H → Set where
-    horiz : ∀ {g} {g'} → Edge G g g' → ∀ h → EdgeProd (g , h) (g' , h)
-    vert  : ∀ g {h} {h'} → Edge H h h' → EdgeProd (g , h) (g , h')
+    -horiz : ∀ {g} {g'} → Edge G g g' → ∀ h → EdgeProd (g , h) (g' , h)
+    -vert  : ∀ g {h} {h'} → Edge H h h' → EdgeProd (g , h) (g , h')
 
   ProdG : Graph
   ProdG = record { Vertex = Vertex G × Vertex H ; Edge = EdgeProd }
@@ -91,8 +91,8 @@ record build-mPGraph (G H K : Graph) : Set where
   appV-out (g , h) = appV g h
 
   appE-out : ∀ {x} {y} → Edge (ProdG G H) x y → MaybeEdge K (appV-out x) (appV-out y)
-  appE-out (horiz x h) = appE1 x h
-  appE-out (vert g x) = appE2 g x
+  appE-out (-horiz x h) = appE1 x h
+  appE-out (-vert g x) = appE2 g x
 
   out : mGraph (ProdG G H) K
   out = record { appV = appV-out ; appE = appE-out }
@@ -114,9 +114,14 @@ module Fibra-GS {G} (A : Fibra-GS G) where
 --    WD x x' x* | plus x₁ p = {!!}
 --    WD x x' x* | minus x₁ p = {!!}
 
-  data EdgeSig : Σ[ g ∈ Vertex G ] El (FibGS g) → Σ[ g ∈ Vertex G ] El (FibGS g) → Set where
-    horiz : ∀ {g g' a} (e : Edge G g g') → EdgeSig (g , a) (g' , transport (flatten (SubGS e)) a)
-    vert  : ∀ {g a a'} → E (FibGS g) a a' → EdgeSig (g , a) (g , a')
+  EdgeSig : Σ[ g ∈ Vertex G ] El (FibGS g) → Σ[ g ∈ Vertex G ] El (FibGS g) → Set
+  EdgeSig x y = ∀ (X : Σ[ g ∈ Vertex G ] El (FibGS g) → Σ[ g ∈ Vertex G ] El (FibGS g) → Set) →
+    (∀ {g g' a} (e : Edge G g g') → X (g , a) (g' , transport (flatten (SubGS e)) a)) →
+    (∀ {g a a'} → E (FibGS g) a a' → X (g , a) (g , a')) →
+    X x y
+
+  vert : ∀ {g a b} → E (FibGS g) a b → EdgeSig (g , a) (g , b)
+  vert e _ _ Xvert = Xvert e
 
   Sigma-GS : Graph
   Sigma-GS = record { 
@@ -124,15 +129,13 @@ module Fibra-GS {G} (A : Fibra-GS G) where
     Edge = EdgeSig }
 
   π₁ : ∀ x y (e : EdgeSig x y) → MaybeEdge G (proj₁ x) (proj₁ y)
-  π₁ _ _ (horiz e) = just G e
-  π₁ _ _ (vert x) = empty G _
+  π₁ _ _ e X Xemp Xjust = e (λ x y → X (proj₁ x) (proj₁ y)) (λ e → Xjust e) (λ _ → Xemp _)
 
   pp : mGraph Sigma-GS G
   pp = record { appV = proj₁ ; appE = π₁ _ _ }
 
-  π₂ : ∀ x y (e : EdgeSig x y) → proj₂ x ~< flatten (SUBGS (π₁ x y e)) > proj₂ y
-  π₂ _ _ (horiz e) = iso-transport (flatten (SubGS e)) _
-  π₂ _ _ (vert x) = x
+  postulate  π₂ : ∀ x y (e : EdgeSig x y) → proj₂ x ~< flatten (SUBGS (π₁ x y e)) > proj₂ y
+--  π₂ _ _ e = {!!}
 
 open Fibra-GS public
 

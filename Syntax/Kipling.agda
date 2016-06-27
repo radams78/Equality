@@ -30,10 +30,10 @@ Prop Γ = Fibra-GP (⟦ Γ ⟧C)
 ⟦ Γ ,, A ⟧C = Sigma-GS A
 ⟦ Γ ,P φ ⟧C = Sigma-GP φ
 
-sublift : ∀ {Γ} {A} (B : Type Γ) {g} {g'} {a} {b} → 
+{-sublift : ∀ {Γ} {A} (B : Type Γ) {g} {g'} {a} {b} → 
   Edge (Sigma-GS A) (g , a) (g' , b) → Iso (FibGS B g) (FibGS B g')
 sublift {Γ} B (horiz e) = flatten (SubGS B e)
-sublift {Γ} B (vert x) = id-iso (FibGS B _)
+sublift {Γ} B (vert x) = id-iso (FibGS B _) -}
 
 lift : ∀ Γ A → Type Γ → Type (Γ ,, A)
 lift Γ A B = pullback (pp A) B
@@ -61,7 +61,7 @@ U {Γ} = record {
 Fibapp1 : ∀ A B → Fibra-GS (Sigma-GS {A} B) → (a : Vertex A) → Fibra-SS (FibGS B a)
 Fibapp1 A B C a = record { 
   FibSS = λ b → FibGS C (a , b) ; 
-  SubSS = λ a* → flatten (SubGS C (vert a*)) ; 
+  SubSS = λ a* → flatten (SubGS C (vert B a*)) ; 
   SubSSr = {!!} ; SubSS* = {!!} }
 
 {-Pi : ∀ {Γ} A → Type (Γ ,, A) → Type Γ
@@ -126,9 +126,9 @@ PathC (Γ ,, A) =
   let A* : Section (Eq {PathC Γ} (left {Γ} A) (right {Γ} A))
       A* = star A in 
   let A*↑ : Section (lift (PathC Γ) (left {Γ} A) (Eq {PathC Γ} (left {Γ} A) (right {Γ} A)))
-      A*↑ = liftS {PathC Γ} A* in
+      A*↑ = liftS {PathC Γ} {left {Γ} A} A* in
   let A*↑' : Section (Eq {PathC Γ ,, left {Γ} A} (lift (PathC Γ) (left {Γ} A) (left {Γ} A)) (lift (PathC Γ) (left {Γ} A) (right {Γ} A)))
-      A*↑' = {!A*↑!} in
+      A*↑' = record { app = Section.app A*↑ ; wd = λ x x' x* → Section.wd {⟦ PathC Γ ,, left {Γ} A ⟧C} {lift (PathC Γ) (left {Γ} A) (Eq {PathC Γ} (left {Γ} A) (right {Γ} A))} A*↑ x x' x* } in
   PathC Γ ,, left {Γ} A ,, lift (PathC Γ) _ (right {Γ} A) ,P 
   eq {PathC Γ ,, left {Γ} A ,, lift (PathC Γ) _ (right {Γ} A)} 
   (⟦_⟧V  {PathC Γ ,, left {Γ} A ,, lift (PathC Γ) _ (right {Γ} A)} (↑ ⊥))
