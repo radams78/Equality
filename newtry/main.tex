@@ -1,0 +1,42 @@
+Remarks.
+
+10.08.2016
+17:42.
+There is a funny duality between datatypes defined by constructors and families built over them by recursion.
+Currently, the idea is that contexts shall be interpreted as free setoids --- while types-in-context are arbitrary setoids fibered over these.
+But, if the interpretation function is valued in the inductive-recursive universe (U,T), the setoid structure on each TA (for A:U) requires "dependent" equality over the paths in the context.
+But the generators of this context "paths" setoid are supposed to come from the (given) setoid stucture of the dependent type.
+So we need to untangle some things here...  Telescopes to the rescure?
+
+18:38.
+It seems correct to start as we do.
+
+16.08.2016
+16:44
+We need to define:
+for all gamma* : gamma = gamma' \in Gamma,
+for all A : Type Gamma
+A [gamma*] : Eq (A gamma) (A gamma')
+
+We have defined a Gamma-type to be a pair (A, A*), where
+A : [[Gamma]] -> U
+A* : (\forall g* : g =G g'), Eq (A g) (A g')
+
+So where is the substitution?  If we are requiring a type in a context to already be a fibration, there is no substitution to be done, is there?
+OTOH, when we construct inhabitants of type by the syntax, then THERE we will be able to witness equivalence/fibrancy of types as well.
+
+Also, the fibrancy requirement has to be there, because otherwise a type is just any meta-level function from [[Gamma]] to U, so it doesn't have to respect anything unless we ask it to.
+
+Now, the syntax is supposed to inhabit types, yes, but it also is supposed to show that any two instances are related.  And this will be the case for type constructors as well (i.e., terms of type *).
+[19:02. Compare type U, and term *, with relation Eq, and terms _*..]
+Finally, while we do ask for types to respect paths in the context, we do not yet have a fibration structure: we still need setoids, isomorphisms, etc.  Defining these is the more difficult part.
+
+When we define the setoid structure of individual types, this is related to defining the preservation of terms of type universe: For unit, empty, and Set it is what it is supposed to be; for Pi- and Sigma-types there is a recursive call with an extended context.  We want to say that f is equal to g in Pi A B if for all x,x',x*, f x is related to g x' in B[x*].  So evidently, the definition of setoid structure on individual types refers back to the fibration of types-in-context.  So isn't it better to define right away the notion of equality _over_ a path, and to derive, as corollary, the exact equality as the same notion of the empty path?
+
+Another question is whether path substitution proceeds by induction on types or on the path.  In our previous system, it's obviously the former.
+
+But obviously the generators for types in context using setoid structure... so get your definitions straight!!!!!
+
+16.08
+21:30
+Should we modify the notion of a type to be fibrant?  Oh yes I think so.
