@@ -33,3 +33,4 @@ record ContrS (S : Setoid) : Set where
   field
     c : El S
     p : ∀ (x : El S) → E S x c
+

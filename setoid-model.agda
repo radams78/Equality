@@ -2,12 +2,20 @@
 
 module setoid-model where
 
-open import setoid
+open import Data.Unit
+open import Data.Product
+open import Data.Sum
+open import prop
+open import Setoid
+open import Setoid.Isomorphism
+open import Setoid.Fibra-SP
+open import genSetoid
 
 infixl 70 _,,_
 data Context : Set
 Type : Context → Set
-⟦_⟧C : Context → Setoid
+⟦_⟧C : Context → Set
+⟦_⟧C' : ∀ (Γ : Context) → graphOver (⟦ Γ ⟧C)
 
 -- postulate Fib : (G : Setoid) → Fibra-SS G → Ob G → Setoid
 -- The collection of contexts Γ
@@ -17,18 +25,22 @@ data Context where
   _,,_ : ∀ Γ → (Type Γ) → Context
 
 -- The collection of Γ-types
-Type Γ = Fibration (⟦ Γ ⟧C)
+Type  Γ = genSP (⟦ Γ ⟧C')
+Type' Γ = genFib (⟦ Γ ⟧C')
 
 -- The collection of Γ-instances
-⟦ 〈〉 ⟧C = UnitG
-⟦ Γ ,, A ⟧C = SigmaG ⟦ Γ ⟧C A
+⟦ 〈〉 ⟧C = ⊤
+⟦ Γ ,, A ⟧C = Σ[ γ ∈ ⟦ Γ ⟧C ] El (genFib.Fam A γ)
+
+⟦ 〈〉 ⟧C' = UnitGen
+⟦ Γ ,, A ⟧C' = Σ-C-S (⟦ Γ ⟧C') A
 
 -- The elements of a Γ-type on the meta-level
 ⟦_⟧T : ∀ {Γ} → Type Γ → Set
 ⟦_⟧T {Γ} A = ∀ γ → Ob (Fib ⟦ Γ ⟧C A γ)
 
 {-
-
+-- Some types are interpreted by Setoids; others by naked Sets.
 data Var : ∀ (Γ : Context) (A : Type Γ) → Set where
   ⊥ : ∀ {Γ} {A} → Var (Γ ,, A) (A ∘ proj₁)
   ↑ : ∀ {Γ} {A} {B} → Var Γ B → Var (Γ ,, A) (B ∘ proj₁)

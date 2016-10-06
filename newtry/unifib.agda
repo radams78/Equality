@@ -53,11 +53,10 @@ T (π A (B , B*)) = (Σ[ f ∈ (∀ a → Elt (B a)) ] (∀ {x} {y} (a* : Eqt A 
 T (σ A (B , B*)) = (Σ[ a ∈ π1 (T A) ] π1 (T (B a))) ,
         makeSetoid (λ {(a , b) (a' , b') → Σ[ a* ∈ (Eqt A a a') ] b ∼⟨ B* a* ⟩ b'})
                    (λ {(a , b) → r (proj₂ (T A)) a , {!!} })
-                   (λ {a1 , b1 {a1' , b1'} (a1* , b1*) {a2 , b2} {a2' , b2'} (a2* , b2*)
+                   (λ { {(a1 , b1)} {(a1' , b1')} (a1* , b1*) {(a2 , b2)} {(a2' , b2')} (a2* , b2*)
                        → (λ {(a* , b*) → (proj₁ (E* (proj₂ (T A)) a1* a2*) a*) ,
                                          {!!}}) ,
-                         {!!}})
-
+                         {!!}} )
 T (A ≃ B) = (Σ[ fg ∈ (Elt A ⇔ Elt B) ] Σ[ R ∈ (Elt A → Elt B → Set) ]
                   areCohIso (proj₂ (T A)) (proj₂ (T B)) fg R) , makeChaos
 
